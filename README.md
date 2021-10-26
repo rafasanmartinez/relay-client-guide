@@ -10,7 +10,7 @@ I am purposedly not using [Flow](https://flow.org/) annotations, as they are use
 
 The code will work well with or without Flow, but I must recognize that when integrated in a bigger team, or when your application gets more complex, using Flow can be worth the effort.
 
-When reviewing or checking out this code, I would assume that you have already went over the following tags:
+When reviewing or checking out this code, I would assume that you have already gone over the following tags:
 
 - [getting-started](https://github.com/rafasanmartinez/relay-client-guide/tree/getting-started)
 - [rendering-quieries](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-quieries)
