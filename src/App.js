@@ -2,6 +2,7 @@
 import React, { Suspense } from 'react';
 import './App.css';
 //import fetchGraphQL from './fetchGraphQL';
+import { useState } from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import {
   RelayEnvironmentProvider,
@@ -76,19 +77,21 @@ query AppRepositoryNameQuery {
 
   if (queryReference == null) {
     return (
-      <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+      <div className="App-Body">
+        <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+      </div>
     );
   }
   else {
     return (
-      <>
+      <div className="App-Body">
         <button onClick={disposeQuery}>
-          Click to hide the name and dispose the query.
+          Click to hide the data and dispose the query.
         </button>
         <Suspense fallback={'Loading...'}>
           <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} />
         </Suspense>
-      </>
+      </div>
     );
   }
 }
@@ -112,12 +115,19 @@ query AppRepositoryNameQuery {
  */
 const DataDisplay = ({ query, queryReference }) => {
 
+  const [state, setState] = useState(false);
+  const buttonText = state ? 'Hide raw result of usePreloadedQuery() in the App Component' : 'See raw result of usePreloadedQuery() in the App Component';
+
   const data = usePreloadedQuery(query, queryReference);
   return (
-    <div className="App-Body">
+    <>
       <RepositoryHeader data={data} />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+      <div style={{ marginTop: '10px' }}><button onClick={() => setState(!state)}>{buttonText}</button></div>
+      {state ?
+        (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>) :
+        (null)
+      }
+    </>
   )
 
 }

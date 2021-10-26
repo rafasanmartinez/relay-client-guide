@@ -18,9 +18,12 @@ When reviewing or checking out this code, I would assume that you have already g
 
 ## Specific to this sample
 
+
 This sample is a slight evolution of [rendering-fragments](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments), but I have added a little bit of modularity to the code by separating the component that displays the Github repository header.
 
 Just notice that the only remarkable change consists on modifying the name of the fragment, so it's name starts with the actual name of the module where it belongs to, as it is required by the Relay compiler.
+
+Additionally, I have made some improvements to the display, including a meand for you to see so you can see in the the raw data returned by the relay hooks on demand.
 
 ## Configure and run this labeled sample: rendering-fragments-2
 
