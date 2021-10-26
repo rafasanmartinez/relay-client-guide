@@ -11,7 +11,9 @@ import {
 } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 import ErrorBoundary from './ErrorBoundary';
+
 import RepositoryHeader from './components/RepositoryHeader';
+import IssuesList from './components/IssuesList';
 
 /**
  * The application:
@@ -40,29 +42,7 @@ function App() {
 query AppRepositoryNameQuery {
   repository(owner: "facebook", name: "relay") {
     ...RepositoryHeader_repository
-    issues(orderBy:{field:CREATED_AT,direction:DESC},states:CLOSED,first:10){
-      edges
-      {
-        cursor
-        node {
-          id
-          title
-          createdAt
-        }
-      }
-      nodes {
-        id
-        title
-        createdAt
-      }
-      pageInfo{
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
-    }
+    ...IssuesList_repository
   }
 }
 `;
@@ -122,6 +102,7 @@ const DataDisplay = ({ query, queryReference }) => {
   return (
     <>
       <RepositoryHeader data={data} />
+      <IssuesList data={data} />
       <div style={{ marginTop: '10px' }}><button onClick={() => setState(!state)}>{buttonText}</button></div>
       {state ?
         (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>) :

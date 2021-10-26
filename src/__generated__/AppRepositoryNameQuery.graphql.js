@@ -8,33 +8,12 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type IssuesList_repository$ref = any;
 type RepositoryHeader_repository$ref = any;
 export type AppRepositoryNameQueryVariables = {||};
 export type AppRepositoryNameQueryResponse = {|
   +repository: ?{|
-    +issues: {|
-      +edges: ?$ReadOnlyArray<?{|
-        +cursor: string,
-        +node: ?{|
-          +id: string,
-          +title: string,
-          +createdAt: any,
-        |},
-      |}>,
-      +nodes: ?$ReadOnlyArray<?{|
-        +id: string,
-        +title: string,
-        +createdAt: any,
-      |}>,
-      +pageInfo: {|
-        +startCursor: ?string,
-        +endCursor: ?string,
-        +hasNextPage: boolean,
-        +hasPreviousPage: boolean,
-      |},
-      +totalCount: number,
-    |},
-    +$fragmentRefs: RepositoryHeader_repository$ref,
+    +$fragmentRefs: RepositoryHeader_repository$ref & IssuesList_repository$ref
   |}
 |};
 export type AppRepositoryNameQuery = {|
@@ -48,29 +27,28 @@ export type AppRepositoryNameQuery = {|
 query AppRepositoryNameQuery {
   repository(owner: "facebook", name: "relay") {
     ...RepositoryHeader_repository
-    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {
-      edges {
-        cursor
-        node {
-          id
-          title
-          createdAt
-        }
-      }
-      nodes {
+    ...IssuesList_repository
+    id
+  }
+}
+
+fragment IssuesList_repository on Repository {
+  issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {
+    edges {
+      cursor
+      node {
         id
         title
         createdAt
       }
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
     }
-    id
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
   }
 }
 
@@ -112,131 +90,6 @@ v2 = {
   "kind": "ScalarField",
   "name": "createdAt",
   "storageKey": null
-},
-v3 = [
-  (v1/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
-  (v2/*: any*/)
-],
-v4 = {
-  "alias": null,
-  "args": [
-    {
-      "kind": "Literal",
-      "name": "first",
-      "value": 10
-    },
-    {
-      "kind": "Literal",
-      "name": "orderBy",
-      "value": {
-        "direction": "DESC",
-        "field": "CREATED_AT"
-      }
-    },
-    {
-      "kind": "Literal",
-      "name": "states",
-      "value": "CLOSED"
-    }
-  ],
-  "concreteType": "IssueConnection",
-  "kind": "LinkedField",
-  "name": "issues",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "IssueEdge",
-      "kind": "LinkedField",
-      "name": "edges",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cursor",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Issue",
-          "kind": "LinkedField",
-          "name": "node",
-          "plural": false,
-          "selections": (v3/*: any*/),
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Issue",
-      "kind": "LinkedField",
-      "name": "nodes",
-      "plural": true,
-      "selections": (v3/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PageInfo",
-      "kind": "LinkedField",
-      "name": "pageInfo",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "startCursor",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "endCursor",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "hasNextPage",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "hasPreviousPage",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "totalCount",
-      "storageKey": null
-    }
-  ],
-  "storageKey": "issues(first:10,orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
 };
 return {
   "fragment": {
@@ -253,11 +106,15 @@ return {
         "name": "repository",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
             "name": "RepositoryHeader_repository"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "IssuesList_repository"
           }
         ],
         "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
@@ -321,7 +178,120 @@ return {
             "storageKey": null
           },
           (v2/*: any*/),
-          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "first",
+                "value": 10
+              },
+              {
+                "kind": "Literal",
+                "name": "orderBy",
+                "value": {
+                  "direction": "DESC",
+                  "field": "CREATED_AT"
+                }
+              },
+              {
+                "kind": "Literal",
+                "name": "states",
+                "value": "CLOSED"
+              }
+            ],
+            "concreteType": "IssueConnection",
+            "kind": "LinkedField",
+            "name": "issues",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "IssueEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Issue",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "startCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasPreviousPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "totalCount",
+                "storageKey": null
+              }
+            ],
+            "storageKey": "issues(first:10,orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
+          },
           (v1/*: any*/)
         ],
         "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
@@ -329,16 +299,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e24c97e5566429fe349c8f8b7b0bce6e",
+    "cacheID": "5caf55b92e40ae77d842e5191ceb9bc3",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      node {\n        id\n        title\n        createdAt\n      }\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '53b37dfd6dcdb21bbda9ca2847da5fef';
+(node/*: any*/).hash = 'dc044a10ec7e57bc2bcb3330e195def2';
 
 module.exports = node;
