@@ -47,7 +47,7 @@ export type AppRepositoryNameQuery = {|
 
 /*
 query AppRepositoryNameQuery {
-  repository(owner: "rafasanmartinez", name: "csif-personal-server") {
+  repository(owner: "facebook", name: "relay") {
     name
     nameWithOwner
     createdAt
@@ -83,12 +83,12 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "name",
-    "value": "csif-personal-server"
+    "value": "relay"
   },
   {
     "kind": "Literal",
     "name": "owner",
-    "value": "rafasanmartinez"
+    "value": "facebook"
   }
 ],
 v1 = {
@@ -264,7 +264,7 @@ return {
           (v3/*: any*/),
           (v6/*: any*/)
         ],
-        "storageKey": "repository(name:\"csif-personal-server\",owner:\"rafasanmartinez\")"
+        "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
       }
     ],
     "type": "Query",
@@ -290,21 +290,21 @@ return {
           (v6/*: any*/),
           (v4/*: any*/)
         ],
-        "storageKey": "repository(name:\"csif-personal-server\",owner:\"rafasanmartinez\")"
+        "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
       }
     ]
   },
   "params": {
-    "cacheID": "3bf23bfb3955fb92804edd7e7c189258",
+    "cacheID": "93ba9ef68223dc143b5499e260819a79",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"rafasanmartinez\", name: \"csif-personal-server\") {\n    name\n    nameWithOwner\n    createdAt\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n"
+    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    name\n    nameWithOwner\n    createdAt\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '76709c57d8c44f94b44ce0850c5340a4';
+(node/*: any*/).hash = 'aef57668ca9d12016379654dbc5d4d12';
 
 module.exports = node;

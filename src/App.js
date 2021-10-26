@@ -16,7 +16,7 @@ const { Suspense } = React;
 // Define a query
 const RepositoryNameQuery = graphql`
   query AppRepositoryNameQuery {
-    repository(owner: "rafasanmartinez", name: "csif-personal-server") {
+    repository(owner: "facebook", name: "relay") {
       name
       nameWithOwner
       createdAt
