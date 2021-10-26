@@ -1,92 +1,119 @@
 // your-app-name/src/App.js
-import React from 'react';
+import React, {Suspense} from 'react';
 import './App.css';
 //import fetchGraphQL from './fetchGraphQL';
 import graphql from 'babel-plugin-relay/macro';
 import {
   RelayEnvironmentProvider,
-  loadQuery,
-  usePreloadedQuery,
+  useQueryLoader,
+  usePreloadedQuery
 } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 import ErrorBoundary from './ErrorBoundary';
 
-const { Suspense } = React;
+/**
+ * The application:
+ *   - Initiates a query object
+ *   - Obtains a handle to load the Query with useQueryLoader
+ *   - The query reference is an instance of the loade query results after if it has been started to be loaded
+ *   - If the query has not been loaded yet (queryReference==null), it displays a button for the user to load the query
+ *   - Af the query has been loaded already (queryReference==null), it displays:
+ *      - A button for the user to dispose the query and start over again, and
+ *      - A DataDisplay component that will display the result of the query by providing to it the query object itself ples the instance of the loaded query results
+ * @returns Content of the application
+ */
+function App() {
 
-// Define a query
-const RepositoryNameQuery = graphql`
-  query AppRepositoryNameQuery {
-    repository(owner: "rafasanmartinez", name: "csif-personal-server") {
-      name
-      nameWithOwner
-      createdAt
-      issues(orderBy:{field:CREATED_AT,direction:DESC},states:CLOSED,first:10){
-        edges
-        {
-          cursor
-          node {
-            id
-            title
-            createdAt
-          }
-        }
-        nodes {
+  // Define a query
+  const RepositoryNameQuery = graphql`
+query AppRepositoryNameQuery {
+  repository(owner: "facebook", name: "relay") {
+    name
+    nameWithOwner
+    createdAt
+    issues(orderBy:{field:CREATED_AT,direction:DESC},states:CLOSED,first:10){
+      edges
+      {
+        cursor
+        node {
           id
           title
           createdAt
         }
-        pageInfo{
-          startCursor
-          endCursor
-          hasNextPage
-          hasPreviousPage
-        }
-        totalCount
       }
+      nodes {
+        id
+        title
+        createdAt
+      }
+      pageInfo{
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
     }
   }
+}
 `;
 
+  const [
+    queryReference,
+    loadQuery,
+    disposeQuery,
+  ] = useQueryLoader(
+    RepositoryNameQuery
+  );
 
-// Immediately load the query as our app starts. For a real app, we'd move this
-// into our routing configuration, preloading data as we transition to new routes.
-const preloadedQuery = loadQuery(RelayEnvironment, RepositoryNameQuery, {
-  /* query variables */
-});
-console.log(preloadedQuery);
+  if (queryReference == null) {
+    return (
+      <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+    );
+  }
+  else {
+    return (
+      <>
+        <button onClick={disposeQuery}>
+          Click to hide the name and dispose the query.
+        </button>
+        <Suspense fallback={'Loading...'}>
+          <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} />
+        </Suspense>
+      </>
+    );
+  }
+}
 
-// Inner component that reads the preloaded query results via `usePreloadedQuery()`.
-// This works as follows:
-// - If the query has completed, it returns the results of the query.
-// - If the query is still pending, it "suspends" (indicates to React that the
-//   component isn't ready to render yet). This will show the nearest <Suspense>
-//   fallback.
-// - If the query failed, it throws the failure error. For simplicity we aren't
-//   handling the failure case here.
-function App(props) {
-  const data = usePreloadedQuery(RepositoryNameQuery, props.preloadedQuery);
-  console.log(data);
+
+/**
+ * This component accepts a query object and a query reference object described in the component App, and 
+ * call usePreloadedQuery to obtain the result of the data extracted when the outer component starts loading
+ * @param query Query object that describes the data that will be displayed
+ * @param queryReference Reference to the loaded data by the outer component
+ * @returns A component that dieplays the data extracted with the query
+ */
+const DataDisplay = ({ query, queryReference }) => {
+
+  const data = usePreloadedQuery(query, queryReference);
   return (
     <div className="App-Body">
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
-  );
+  )
+
 }
 
-// The above component needs to know how to access the Relay environment, and we
-// need to specify a fallback in case it suspends:
-// - <RelayEnvironmentProvider> tells child components how to talk to the current
-//   Relay Environment instance
-// - <Suspense> specifies a fallback in case a child suspends.
-function AppRoot(props) {
+/**
+ * Applies Relay Envisonment and Error Boundary
+ * @returns Root element of the application
+ */
+function AppRoot() {
   return (
-
     <RelayEnvironmentProvider environment={RelayEnvironment}>
-      <Suspense fallback={'Loading...'}>
-        <ErrorBoundary>
-          <App preloadedQuery={preloadedQuery} />
-        </ErrorBoundary>
-      </Suspense>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </RelayEnvironmentProvider>
   );
 }
