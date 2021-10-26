@@ -18,7 +18,7 @@ import ErrorBoundary from './ErrorBoundary';
  *   - The query reference is an instance of the loade query results after if it has been started to be loaded
  *   - If the query has not been loaded yet (queryReference==null), it displays a button for the user to load the query
  *   - Af the query has been loaded already (queryReference==null), it displays:
- *      - A button for the user to dispose the query and start over again, and
+ *      - A button for the user to dispose the query and start over again, and 
  *      - A DataDisplay component that will display the result of the query by providing to it the query object itself ples the instance of the loaded query results
  * @returns Content of the application
  */
