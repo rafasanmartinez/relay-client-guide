@@ -8,12 +8,10 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type AppRepositoryHeader_repository$ref = any;
 export type AppRepositoryNameQueryVariables = {||};
 export type AppRepositoryNameQueryResponse = {|
   +repository: ?{|
-    +name: string,
-    +nameWithOwner: string,
-    +createdAt: any,
     +issues: {|
       +edges: ?$ReadOnlyArray<?{|
         +cursor: string,
@@ -36,6 +34,7 @@ export type AppRepositoryNameQueryResponse = {|
       |},
       +totalCount: number,
     |},
+    +$fragmentRefs: AppRepositoryHeader_repository$ref,
   |}
 |};
 export type AppRepositoryNameQuery = {|
@@ -48,9 +47,7 @@ export type AppRepositoryNameQuery = {|
 /*
 query AppRepositoryNameQuery {
   repository(owner: "facebook", name: "relay") {
-    name
-    nameWithOwner
-    createdAt
+    ...AppRepositoryHeader_repository
     issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {
       edges {
         cursor
@@ -76,6 +73,17 @@ query AppRepositoryNameQuery {
     id
   }
 }
+
+fragment AppRepositoryHeader_repository on Repository {
+  owner {
+    __typename
+    login
+    id
+  }
+  name
+  nameWithOwner
+  createdAt
+}
 */
 
 const node/*: ConcreteRequest*/ = (function(){
@@ -95,32 +103,18 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "nameWithOwner",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "createdAt",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = [
-  (v4/*: any*/),
+v3 = [
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -128,9 +122,9 @@ v5 = [
     "name": "title",
     "storageKey": null
   },
-  (v3/*: any*/)
+  (v2/*: any*/)
 ],
-v6 = {
+v4 = {
   "alias": null,
   "args": [
     {
@@ -179,7 +173,7 @@ v6 = {
           "kind": "LinkedField",
           "name": "node",
           "plural": false,
-          "selections": (v5/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         }
       ],
@@ -192,7 +186,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "nodes",
       "plural": true,
-      "selections": (v5/*: any*/),
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -259,10 +253,12 @@ return {
         "name": "repository",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v6/*: any*/)
+          (v4/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AppRepositoryHeader_repository"
+          }
         ],
         "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
       }
@@ -284,27 +280,65 @@ return {
         "name": "repository",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": null,
+            "kind": "LinkedField",
+            "name": "owner",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "login",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "nameWithOwner",
+            "storageKey": null
+          },
           (v2/*: any*/),
-          (v3/*: any*/),
-          (v6/*: any*/),
-          (v4/*: any*/)
+          (v4/*: any*/),
+          (v1/*: any*/)
         ],
         "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
       }
     ]
   },
   "params": {
-    "cacheID": "93ba9ef68223dc143b5499e260819a79",
+    "cacheID": "a43d4cc8c95abc253fe66c0bd70a7a25",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    name\n    nameWithOwner\n    createdAt\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n"
+    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...AppRepositoryHeader_repository\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n\nfragment AppRepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'aef57668ca9d12016379654dbc5d4d12';
+(node/*: any*/).hash = '6bcb1514b479236ed8dfbf72e29f0c85';
 
 module.exports = node;
