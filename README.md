@@ -13,7 +13,7 @@ The code will work well with or without Flow, but I must recognize that when int
 When reviewing or checking out this code, I would assume that you have already went over the following tags:
 
 - [getting-started](https://github.com/rafasanmartinez/relay-client-guide/tree/getting-started)
-- [rendering-quieries](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-quieries)https://relay.dev/docs/
+- [rendering-quieries](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-quieries)
 - [rendering-fragments](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments)
 
 ## Specific to this sample
