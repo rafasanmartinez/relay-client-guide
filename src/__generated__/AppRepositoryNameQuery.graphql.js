@@ -8,7 +8,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type AppRepositoryHeader_repository$ref = any;
+type RepositoryHeader_repository$ref = any;
 export type AppRepositoryNameQueryVariables = {||};
 export type AppRepositoryNameQueryResponse = {|
   +repository: ?{|
@@ -34,7 +34,7 @@ export type AppRepositoryNameQueryResponse = {|
       |},
       +totalCount: number,
     |},
-    +$fragmentRefs: AppRepositoryHeader_repository$ref,
+    +$fragmentRefs: RepositoryHeader_repository$ref,
   |}
 |};
 export type AppRepositoryNameQuery = {|
@@ -47,7 +47,7 @@ export type AppRepositoryNameQuery = {|
 /*
 query AppRepositoryNameQuery {
   repository(owner: "facebook", name: "relay") {
-    ...AppRepositoryHeader_repository
+    ...RepositoryHeader_repository
     issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {
       edges {
         cursor
@@ -74,7 +74,7 @@ query AppRepositoryNameQuery {
   }
 }
 
-fragment AppRepositoryHeader_repository on Repository {
+fragment RepositoryHeader_repository on Repository {
   owner {
     __typename
     login
@@ -257,7 +257,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AppRepositoryHeader_repository"
+            "name": "RepositoryHeader_repository"
           }
         ],
         "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
@@ -329,16 +329,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a43d4cc8c95abc253fe66c0bd70a7a25",
+    "cacheID": "e24c97e5566429fe349c8f8b7b0bce6e",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...AppRepositoryHeader_repository\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n\nfragment AppRepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n      edges {\n        cursor\n        node {\n          id\n          title\n          createdAt\n        }\n      }\n      nodes {\n        id\n        title\n        createdAt\n      }\n      pageInfo {\n        startCursor\n        endCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      totalCount\n    }\n    id\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '6bcb1514b479236ed8dfbf72e29f0c85';
+(node/*: any*/).hash = '53b37dfd6dcdb21bbda9ca2847da5fef';
 
 module.exports = node;

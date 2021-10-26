@@ -1,4 +1,4 @@
-# Relay Client Sample
+# Relay Client Guide
 
 The objective of this project is to go over the documentation of Relay and ilustrate with practical cases the lessons in the Relay documentation.
 

@@ -9,21 +9,21 @@
 /*::
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type AppRepositoryHeader_repository$ref: FragmentReference;
-declare export opaque type AppRepositoryHeader_repository$fragmentType: AppRepositoryHeader_repository$ref;
-export type AppRepositoryHeader_repository = {|
+declare export opaque type RepositoryHeader_repository$ref: FragmentReference;
+declare export opaque type RepositoryHeader_repository$fragmentType: RepositoryHeader_repository$ref;
+export type RepositoryHeader_repository = {|
   +owner: {|
     +login: string
   |},
   +name: string,
   +nameWithOwner: string,
   +createdAt: any,
-  +$refType: AppRepositoryHeader_repository$ref,
+  +$refType: RepositoryHeader_repository$ref,
 |};
-export type AppRepositoryHeader_repository$data = AppRepositoryHeader_repository;
-export type AppRepositoryHeader_repository$key = {
-  +$data?: AppRepositoryHeader_repository$data,
-  +$fragmentRefs: AppRepositoryHeader_repository$ref,
+export type RepositoryHeader_repository$data = RepositoryHeader_repository;
+export type RepositoryHeader_repository$key = {
+  +$data?: RepositoryHeader_repository$data,
+  +$fragmentRefs: RepositoryHeader_repository$ref,
   ...
 };
 */
@@ -33,7 +33,7 @@ const node/*: ReaderFragment*/ = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AppRepositoryHeader_repository",
+  "name": "RepositoryHeader_repository",
   "selections": [
     {
       "alias": null,
@@ -79,6 +79,6 @@ const node/*: ReaderFragment*/ = {
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = '6798a0464695b700d351a9c72b066987';
+(node/*: any*/).hash = 'b7868613169a3ceb4ecd62a0a3916614';
 
 module.exports = node;
