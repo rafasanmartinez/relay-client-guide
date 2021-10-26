@@ -25,10 +25,11 @@ import RepositoryHeader from './components/RepositoryHeader';
  * Important: In order to display a fragment further down in a component, the query includes the name of the fragment with the spread `...`operator like:
  * 
  * ```
- * ...AppRepositoryHeader_repository
+ * ...RepositoryHeader_repository
  * ````
  * 
  * Relay knows how to deal with this fragment as they are used in the components of the app
+ * 
  * @returns Content of the application
  */
 function App() {
@@ -124,7 +125,7 @@ const DataDisplay = ({ query, queryReference }) => {
 
 
 /**
- * Applies Relay Envisonment and Error Boundary
+ * Applies Relay Environment and Error Boundary
  * @returns Root element of the application
  */
 function AppRoot() {
