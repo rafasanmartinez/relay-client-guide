@@ -4,7 +4,9 @@ The objective of this project is to go over the documentation of Relay and ilust
 
 You can use this project by checking out the different tags that correspond to the respective lessons in the Relay site documentation.
 
-## Configure and run this labeled sample: rendering-queries
+The code in the `App.js` file contains comments with the explanations that you need to better understand how to make it to work.
+
+## Configure and run this labeled sample: rendering-fragments
 
 This project connects to the Github GraphQL server. You can find information about it in the [Github GraphQL API](https://docs.github.com/es/graphql) site.
 
