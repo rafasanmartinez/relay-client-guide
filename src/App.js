@@ -38,8 +38,8 @@ function App() {
 
   // Define a query
   const RepositoryNameQuery = graphql`
-query AppRepositoryNameQuery {
-  repository(owner: "facebook", name: "relay") {
+query AppRepositoryNameQuery($owner:String!, $name:String! ) {
+  repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
     ...IssuesList_repository
   }
@@ -57,7 +57,18 @@ query AppRepositoryNameQuery {
   if (queryReference == null) {
     return (
       <div className="App-Body">
-        <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+        <div style={{ marginTop: '5px' }}>
+          <label style={{ marginRight: '10px' }}>
+            Repository Owner:
+            <input type="text" style={{ marginLeft: '5px' }} />
+          </label>
+          <label style={{ marginRight: '10px' }}>
+            Repository Name:
+            <input type="text" />
+          </label>
+          <input type="submit" value="Submit" />
+        </div>
+        <button onClick={() => loadQuery({ "owner": "facebook", "name": "relay" })}>Click to reveal the data </button>
       </div>
     );
   }

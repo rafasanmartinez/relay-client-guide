@@ -10,7 +10,10 @@
 import type { ConcreteRequest } from 'relay-runtime';
 type IssuesList_repository$ref = any;
 type RepositoryHeader_repository$ref = any;
-export type AppRepositoryNameQueryVariables = {||};
+export type AppRepositoryNameQueryVariables = {|
+  owner: string,
+  name: string,
+|};
 export type AppRepositoryNameQueryResponse = {|
   +repository: ?{|
     +$fragmentRefs: RepositoryHeader_repository$ref & IssuesList_repository$ref
@@ -24,8 +27,11 @@ export type AppRepositoryNameQuery = {|
 
 
 /*
-query AppRepositoryNameQuery {
-  repository(owner: "facebook", name: "relay") {
+query AppRepositoryNameQuery(
+  $owner: String!
+  $name: String!
+) {
+  repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
     ...IssuesList_repository
     id
@@ -69,26 +75,36 @@ fragment RepositoryHeader_repository on Repository {
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "name"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "owner"
+},
+v2 = [
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "name",
-    "value": "relay"
+    "variableName": "name"
   },
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "owner",
-    "value": "facebook"
+    "variableName": "owner"
   }
 ],
-v1 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -97,14 +113,17 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "AppRepositoryNameQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "Repository",
         "kind": "LinkedField",
         "name": "repository",
@@ -121,7 +140,7 @@ return {
             "name": "IssuesList_repository"
           }
         ],
-        "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -129,13 +148,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "AppRepositoryNameQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "Repository",
         "kind": "LinkedField",
         "name": "repository",
@@ -163,7 +185,7 @@ return {
                 "name": "login",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -181,7 +203,7 @@ return {
             "name": "nameWithOwner",
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": [
@@ -232,7 +254,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -240,7 +262,7 @@ return {
                         "name": "title",
                         "storageKey": null
                       },
-                      (v2/*: any*/)
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -296,23 +318,23 @@ return {
             ],
             "storageKey": "issues(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
           },
-          (v1/*: any*/)
+          (v3/*: any*/)
         ],
-        "storageKey": "repository(name:\"relay\",owner:\"facebook\")"
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "5a3184493c1910d0d156e3a6285b9158",
+    "cacheID": "46dd8677f9366fcb0963f54d7b94699b",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery(\n  $owner: String!\n  $name: String!\n) {\n  repository(owner: $owner, name: $name) {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'dc044a10ec7e57bc2bcb3330e195def2';
+(node/*: any*/).hash = '402a033b166cdf5b52e1195718092c84';
 
 module.exports = node;
