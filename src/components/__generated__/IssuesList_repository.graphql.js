@@ -8,6 +8,7 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
+type IssuesList_issue$ref = any;
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type IssuesList_repository$ref: FragmentReference;
 declare export opaque type IssuesList_repository$fragmentType: IssuesList_repository$ref;
@@ -15,11 +16,7 @@ export type IssuesList_repository = {|
   +issues: {|
     +edges: ?$ReadOnlyArray<?{|
       +cursor: string,
-      +node: ?{|
-        +id: string,
-        +title: string,
-        +createdAt: any,
-      |},
+      +$fragmentRefs: IssuesList_issue$ref,
     |}>,
     +pageInfo: {|
       +startCursor: ?string,
@@ -58,7 +55,7 @@ const node/*: ReaderFragment*/ = {
           "kind": "Literal",
           "name": "orderBy",
           "value": {
-            "direction": "DESC",
+            "direction": "ASC",
             "field": "CREATED_AT"
           }
         },
@@ -89,36 +86,9 @@ const node/*: ReaderFragment*/ = {
               "storageKey": null
             },
             {
-              "alias": null,
               "args": null,
-              "concreteType": "Issue",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "title",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "createdAt",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
+              "kind": "FragmentSpread",
+              "name": "IssuesList_issue"
             }
           ],
           "storageKey": null
@@ -170,13 +140,13 @@ const node/*: ReaderFragment*/ = {
           "storageKey": null
         }
       ],
-      "storageKey": "issues(first:10,orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
+      "storageKey": "issues(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
     }
   ],
   "type": "Repository",
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = '7952416cf392a4455fea3b205b1a4a8f';
+(node/*: any*/).hash = 'a476ac194d45962629bfcc1d2ffd925e';
 
 module.exports = node;

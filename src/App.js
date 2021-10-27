@@ -1,8 +1,6 @@
 // your-app-name/src/App.js
 import React, { Suspense } from 'react';
 import './App.css';
-//import fetchGraphQL from './fetchGraphQL';
-import { useState } from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import {
   RelayEnvironmentProvider,
@@ -14,6 +12,7 @@ import ErrorBoundary from './ErrorBoundary';
 
 import RepositoryHeader from './components/RepositoryHeader';
 import IssuesList from './components/IssuesList';
+import DisplayRawdata from './components/DisplayRawData';
 
 /**
  * The application:
@@ -95,25 +94,16 @@ query AppRepositoryNameQuery {
  */
 const DataDisplay = ({ query, queryReference }) => {
 
-  const [state, setState] = useState(false);
-  const buttonText = state ? 'Hide raw result of usePreloadedQuery() in the App Component' : 'See raw result of usePreloadedQuery() in the App Component';
-
   const data = usePreloadedQuery(query, queryReference);
   return (
     <>
       <RepositoryHeader data={data} />
       <IssuesList data={data} />
-      <div style={{ marginTop: '10px' }}><button onClick={() => setState(!state)}>{buttonText}</button></div>
-      {state ?
-        (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>) :
-        (null)
-      }
+      <DisplayRawdata data={data} contentDescription='raw result of usePreloadedQuery() in the App Component' />
     </>
   )
 
 }
-
-
 
 /**
  * Applies Relay Environment and Error Boundary

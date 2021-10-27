@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro';
-import { useState } from 'react';
 import { useFragment } from 'react-relay/hooks';
+import DisplayRawdata from './DisplayRawData';
 /**
  * This component displays general information about a Github Repository given the result of a loaded query, that contains 
  * information about how to spread the fragment that contains the data pertained to it.
@@ -9,12 +9,9 @@ import { useFragment } from 'react-relay/hooks';
  * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`
  *  
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment 
- * @returns A React component that displays general information (owner, name, etc.) about a Github Repository
+ * @returns The resulted React component content
  */
 const RepositoryHeader = ({ data }) => {
-
-  const [state, setState] = useState(false);
-  const buttonText = state ? 'Hide raw result of useFragment() in header' : 'See raw result of useFragment() in header';
 
   const fragmentData = useFragment(
     graphql`
@@ -37,11 +34,7 @@ const RepositoryHeader = ({ data }) => {
       <div>Repository: <span>{fragmentData.name}</span></div>
       <div>Name with Owner: <span>{fragmentData.nameWithOwner}</span></div>
       <div>Created at: <span>{fragmentData.createdAt}</span></div>
-      <div><button onClick={() => setState(!state)}>{buttonText}</button></div>
-      {state? 
-      (<div><pre>{JSON.stringify(fragmentData, null, 2)}</pre></div>):
-      (null)
-      }
+      <DisplayRawdata data={fragmentData} contentDescription='raw result of useFragment() in header' />
     </div>
   )
 }

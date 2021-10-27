@@ -32,15 +32,19 @@ query AppRepositoryNameQuery {
   }
 }
 
+fragment IssuesList_issue on IssueEdge {
+  node {
+    id
+    title
+    createdAt
+  }
+}
+
 fragment IssuesList_repository on Repository {
-  issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {
+  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {
     edges {
       cursor
-      node {
-        id
-        title
-        createdAt
-      }
+      ...IssuesList_issue
     }
     pageInfo {
       startCursor
@@ -190,7 +194,7 @@ return {
                 "kind": "Literal",
                 "name": "orderBy",
                 "value": {
-                  "direction": "DESC",
+                  "direction": "ASC",
                   "field": "CREATED_AT"
                 }
               },
@@ -290,7 +294,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "issues(first:10,orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
+            "storageKey": "issues(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
           },
           (v1/*: any*/)
         ],
@@ -299,12 +303,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5caf55b92e40ae77d842e5191ceb9bc3",
+    "cacheID": "5a3184493c1910d0d156e3a6285b9158",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: DESC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      node {\n        id\n        title\n        createdAt\n      }\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery {\n  repository(owner: \"facebook\", name: \"relay\") {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
