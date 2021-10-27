@@ -1,7 +1,6 @@
 // your-app-name/src/App.js
 import React, { Suspense } from 'react';
 import './App.css';
-//import fetchGraphQL from './fetchGraphQL';
 import graphql from 'babel-plugin-relay/macro';
 import {
   RelayEnvironmentProvider,
@@ -10,7 +9,10 @@ import {
 } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 import ErrorBoundary from './ErrorBoundary';
+
 import RepositoryHeader from './components/RepositoryHeader';
+import IssuesList from './components/IssuesList';
+import DisplayRawdata from './components/DisplayRawData';
 
 /**
  * The application:
@@ -39,29 +41,7 @@ function App() {
 query AppRepositoryNameQuery {
   repository(owner: "facebook", name: "relay") {
     ...RepositoryHeader_repository
-    issues(orderBy:{field:CREATED_AT,direction:DESC},states:CLOSED,first:10){
-      edges
-      {
-        cursor
-        node {
-          id
-          title
-          createdAt
-        }
-      }
-      nodes {
-        id
-        title
-        createdAt
-      }
-      pageInfo{
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
-    }
+    ...IssuesList_repository
   }
 }
 `;
@@ -76,19 +56,21 @@ query AppRepositoryNameQuery {
 
   if (queryReference == null) {
     return (
-      <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+      <div className="App-Body">
+        <button onClick={() => loadQuery({})}>Click to reveal the data </button>
+      </div>
     );
   }
   else {
     return (
-      <>
+      <div className="App-Body">
         <button onClick={disposeQuery}>
-          Click to hide the name and dispose the query.
+          Click to hide the data and dispose the query.
         </button>
         <Suspense fallback={'Loading...'}>
           <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} />
         </Suspense>
-      </>
+      </div>
     );
   }
 }
@@ -114,15 +96,14 @@ const DataDisplay = ({ query, queryReference }) => {
 
   const data = usePreloadedQuery(query, queryReference);
   return (
-    <div className="App-Body">
+    <>
       <RepositoryHeader data={data} />
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+      <IssuesList data={data} />
+      <DisplayRawdata data={data} contentDescription='raw result of usePreloadedQuery() in the App Component' />
+    </>
   )
 
 }
-
-
 
 /**
  * Applies Relay Environment and Error Boundary
