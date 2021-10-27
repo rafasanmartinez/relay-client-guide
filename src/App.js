@@ -1,5 +1,5 @@
 // your-app-name/src/App.js
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import './App.css';
 import graphql from 'babel-plugin-relay/macro';
 import {
@@ -13,6 +13,28 @@ import ErrorBoundary from './ErrorBoundary';
 import RepositoryHeader from './components/RepositoryHeader';
 import IssuesList from './components/IssuesList';
 import DisplayRawdata from './components/DisplayRawData';
+
+/**
+ * Provides Control State for Forms inputs. Credits for Evan Schultz in his [blog entry](https://rangle.io/blog/simplifying-controlled-inputs-with-hooks/)
+ *  
+ * @param initialValue 
+ * @returns Control handlers for a form input
+ */
+const useInput = initialValue => {
+  const [value, setValue] = useState(initialValue);
+
+  return {
+    value,
+    setValue,
+    reset: () => setValue(""),
+    bind: {
+      value,
+      onChange: event => {
+        setValue(event.target.value);
+      }
+    }
+  };
+};
 
 /**
  * The application:
@@ -36,6 +58,12 @@ import DisplayRawdata from './components/DisplayRawData';
  */
 function App() {
 
+  // State controllers for form inputs
+  const { value: owner, bind: bindOwner} = useInput('facebook');
+  const { value: name, bind: bindName} = useInput('relay');
+
+  const [lastQueryReference, setLastQueryReference] = useState(null);
+
   // Define a query
   const RepositoryNameQuery = graphql`
 query AppRepositoryNameQuery($owner:String!, $name:String! ) {
@@ -51,24 +79,37 @@ query AppRepositoryNameQuery($owner:String!, $name:String! ) {
     loadQuery,
     disposeQuery,
   ] = useQueryLoader(
-    RepositoryNameQuery
+    RepositoryNameQuery,
+    lastQueryReference
   );
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    /*
+    console.log(owner);
+    console.log(name);
+    */
+    loadQuery({ "owner": owner, "name": name });
+    setLastQueryReference(queryReference);
+  }
 
   if (queryReference == null) {
     return (
       <div className="App-Body">
-        <div style={{ marginTop: '5px' }}>
-          <label style={{ marginRight: '10px' }}>
-            Repository Owner:
-            <input type="text" style={{ marginLeft: '5px' }} />
-          </label>
-          <label style={{ marginRight: '10px' }}>
-            Repository Name:
-            <input type="text" />
-          </label>
-          <input type="submit" value="Submit" />
-        </div>
-        <button onClick={() => loadQuery({ "owner": "facebook", "name": "relay" })}>Click to reveal the data </button>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginTop: '5px' }}>
+            <label style={{ marginRight: '10px' }}>
+              Repository Owner:
+              <input type="text" style={{ marginLeft: '5px' }} {...bindOwner} />
+            </label>
+            <label style={{ marginRight: '10px' }}>
+              Repository Name:
+              <input type="text" {...bindName}/>
+            </label>
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+        <button onClick={() => loadQuery({ "owner": owner, "name": name })}>Click to reveal the data </button>
       </div>
     );
   }
