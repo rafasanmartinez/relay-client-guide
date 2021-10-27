@@ -13,6 +13,7 @@ type RepositoryHeader_repository$ref = any;
 export type AppRepositoryNameQueryVariables = {|
   owner: string,
   name: string,
+  issuesFirst?: ?number,
 |};
 export type AppRepositoryNameQueryResponse = {|
   +repository: ?{|
@@ -30,6 +31,7 @@ export type AppRepositoryNameQuery = {|
 query AppRepositoryNameQuery(
   $owner: String!
   $name: String!
+  $issuesFirst: Int
 ) {
   repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
@@ -47,7 +49,7 @@ fragment IssuesList_issue on IssueEdge {
 }
 
 fragment IssuesList_repository on Repository {
-  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {
+  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: $issuesFirst) {
     edges {
       cursor
       ...IssuesList_issue
@@ -78,14 +80,19 @@ const node/*: ConcreteRequest*/ = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "name"
+  "name": "issuesFirst"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "name"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "owner"
 },
-v2 = [
+v3 = [
   {
     "kind": "Variable",
     "name": "name",
@@ -97,14 +104,14 @@ v2 = [
     "variableName": "owner"
   }
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -115,7 +122,8 @@ return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -123,7 +131,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "Repository",
         "kind": "LinkedField",
         "name": "repository",
@@ -149,6 +157,7 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
+      (v2/*: any*/),
       (v1/*: any*/),
       (v0/*: any*/)
     ],
@@ -157,7 +166,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "Repository",
         "kind": "LinkedField",
         "name": "repository",
@@ -185,7 +194,7 @@ return {
                 "name": "login",
                 "storageKey": null
               },
-              (v3/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -203,14 +212,14 @@ return {
             "name": "nameWithOwner",
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": [
               {
-                "kind": "Literal",
+                "kind": "Variable",
                 "name": "first",
-                "value": 10
+                "variableName": "issuesFirst"
               },
               {
                 "kind": "Literal",
@@ -254,7 +263,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -262,7 +271,7 @@ return {
                         "name": "title",
                         "storageKey": null
                       },
-                      (v4/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -316,25 +325,25 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "issues(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
+            "storageKey": null
           },
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "46dd8677f9366fcb0963f54d7b94699b",
+    "cacheID": "3034146ea3aaae92aed3477bee990359",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery(\n  $owner: String!\n  $name: String!\n) {\n  repository(owner: $owner, name: $name) {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: 10) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery(\n  $owner: String!\n  $name: String!\n  $issuesFirst: Int\n) {\n  repository(owner: $owner, name: $name) {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: $issuesFirst) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '402a033b166cdf5b52e1195718092c84';
+(node/*: any*/).hash = 'a2cafb634a2df63c6d70016d80fda8c9';
 
 module.exports = node;

@@ -38,7 +38,12 @@ export type IssuesList_repository$key = {
 
 
 const node/*: ReaderFragment*/ = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "issuesFirst"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "IssuesList_repository",
@@ -47,9 +52,9 @@ const node/*: ReaderFragment*/ = {
       "alias": null,
       "args": [
         {
-          "kind": "Literal",
+          "kind": "Variable",
           "name": "first",
-          "value": 10
+          "variableName": "issuesFirst"
         },
         {
           "kind": "Literal",
@@ -140,13 +145,13 @@ const node/*: ReaderFragment*/ = {
           "storageKey": null
         }
       ],
-      "storageKey": "issues(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"CREATED_AT\"},states:\"CLOSED\")"
+      "storageKey": null
     }
   ],
   "type": "Repository",
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = 'a476ac194d45962629bfcc1d2ffd925e';
+(node/*: any*/).hash = 'f8e9c0018213db37e965201fbe2fced6';
 
 module.exports = node;

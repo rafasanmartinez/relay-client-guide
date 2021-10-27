@@ -17,12 +17,12 @@ import DisplayRawdata from "./DisplayRawData";
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment  
  * @returns The resulted React component content
  */
-const IssuesList = ({ data }) => {
+const IssuesList = ({ data, issuesToDisplay }) => {
 
     const fragmentData = useFragment(
         graphql`
         fragment IssuesList_repository on Repository {
-            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:10)
+            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:$issuesFirst)
             {
                 edges
                 {
@@ -45,7 +45,7 @@ const IssuesList = ({ data }) => {
     return (
         <>
             <div style={{ border: '1px solid black', padding: '10px', marginTop: '10px' }}>
-                <div><strong>Total Closed Issues (showing first 10): {fragmentData.issues.totalCount}</strong></div>
+                <div><strong>Total Closed Issues (showing first {issuesToDisplay}): {fragmentData.issues.totalCount}</strong></div>
                 {fragmentData.issues.edges.map(
                     (data) => (
                         <div key={data.cursor} style={{ border: '1px solid black', marginTop: '5px', padding: '5px' }}>

@@ -59,72 +59,69 @@ const useInput = initialValue => {
 function App() {
 
   // State controllers for form inputs
-  const { value: owner, bind: bindOwner} = useInput('facebook');
-  const { value: name, bind: bindName} = useInput('relay');
+  const { value: owner, bind: bindOwner } = useInput('facebook');
+  const { value: name, bind: bindName } = useInput('relay');
+  const {value: issuesFirst, bind: bindIssuesFirst} = useInput('10');
 
-  const [lastQueryReference, setLastQueryReference] = useState(null);
 
-  // Define a query
+  // Define the query
   const RepositoryNameQuery = graphql`
-query AppRepositoryNameQuery($owner:String!, $name:String! ) {
+   query AppRepositoryNameQuery($owner:String!, $name:String!, $issuesFirst: Int ) {
   repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
     ...IssuesList_repository
   }
 }
 `;
-
+  // Obtain a Query Loader
   const [
     queryReference,
     loadQuery,
     disposeQuery,
   ] = useQueryLoader(
-    RepositoryNameQuery,
-    lastQueryReference
+    RepositoryNameQuery
   );
 
+  // Handler function for the form
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    /*
-    console.log(owner);
-    console.log(name);
-    */
-    loadQuery({ "owner": owner, "name": name });
-    setLastQueryReference(queryReference);
+    loadQuery({ "owner": owner, "name": name , "issuesFirst": parseInt(issuesFirst)});
   }
 
-  if (queryReference == null) {
-    return (
-      <div className="App-Body">
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginTop: '5px' }}>
-            <label style={{ marginRight: '10px' }}>
-              Repository Owner:
-              <input type="text" style={{ marginLeft: '5px' }} {...bindOwner} />
-            </label>
-            <label style={{ marginRight: '10px' }}>
-              Repository Name:
-              <input type="text" {...bindName}/>
-            </label>
-            <input type="submit" value="Submit" />
-          </div>
-        </form>
-        <button onClick={() => loadQuery({ "owner": owner, "name": name })}>Click to reveal the data </button>
-      </div>
-    );
-  }
-  else {
-    return (
-      <div className="App-Body">
-        <button onClick={disposeQuery}>
-          Click to hide the data and dispose the query.
-        </button>
-        <Suspense fallback={'Loading...'}>
-          <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} />
-        </Suspense>
-      </div>
-    );
-  }
+
+  return (
+    <div className="App-Body">
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginTop: '5px' }}>
+          <label style={{ marginRight: '10px' }}>
+            Repository Owner:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindOwner} />
+          </label>
+          <label style={{ marginRight: '10px' }}>
+            Repository Name:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindName} />
+          </label>
+          <label style={{ marginRight: '10px' }}>
+            Issues to Display:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindIssuesFirst} />
+          </label>
+          <input type="submit" value="Submit" />
+        </div>
+      </form>
+
+      {queryReference != null &&
+        <>
+          <button onClick={disposeQuery}>
+            Click to hide the data and dispose the query.
+          </button>
+          <Suspense fallback={<div>'Loading...'</div>}>
+            <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} issuesToDisplay={issuesFirst} />
+          </Suspense>
+        </>
+      }
+    </div>
+  );
 }
 
 
@@ -144,13 +141,13 @@ query AppRepositoryNameQuery($owner:String!, $name:String! ) {
  * @param queryReference Reference to the loaded data by the outer component
  * @returns A component that displays the data extracted with the query
  */
-const DataDisplay = ({ query, queryReference }) => {
+const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
 
   const data = usePreloadedQuery(query, queryReference);
   return (
     <>
       <RepositoryHeader data={data} />
-      <IssuesList data={data} />
+      <IssuesList data={data} issuesToDisplay={issuesToDisplay} />
       <DisplayRawdata data={data} contentDescription='raw result of usePreloadedQuery() in the App Component' />
     </>
   )
