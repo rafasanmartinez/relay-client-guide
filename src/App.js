@@ -1,5 +1,5 @@
 // your-app-name/src/App.js
-import React, { Suspense, useState } from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
 import graphql from 'babel-plugin-relay/macro';
 import {
@@ -9,50 +9,35 @@ import {
 } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 import ErrorBoundary from './ErrorBoundary';
+import useInput from './helpers/UseInput';
 
 import RepositoryHeader from './components/RepositoryHeader';
 import IssuesList from './components/IssuesList';
 import DisplayRawdata from './components/DisplayRawData';
 
 /**
- * Provides Control State for Forms inputs. Credits for Evan Schultz in his [blog entry](https://rangle.io/blog/simplifying-controlled-inputs-with-hooks/)
- *  
- * @param initialValue 
- * @returns Control handlers for a form input
- */
-const useInput = initialValue => {
-  const [value, setValue] = useState(initialValue);
-
-  return {
-    value,
-    setValue,
-    reset: () => setValue(""),
-    bind: {
-      value,
-      onChange: event => {
-        setValue(event.target.value);
-      }
-    }
-  };
-};
-
-/**
  * The application:
+ *   - Displays a form to get the parameters from the user
  *   - Initiates a query object
  *   - Obtains a handle to load the Query with useQueryLoader
- *   - The query reference is an instance of the loade query results after if it has been started to be loaded
- *   - If the query has not been loaded yet (queryReference==null), it displays a button for the user to load the query
- *   - Af the query has been loaded already (queryReference==null), it displays:
- *      - A button for the user to dispose the query and start over again, and 
- *      - A DataDisplay component that will display the result of the query by providing to it the query object itself ples the instance of the loaded query results
+ *   - The query reference is an instance of the loaded query results after if it has been started to be loaded
+ *   - When the user submits the data in the form, the application loads the query and display the data fetched.
+ *   - If the query has been loaded already (queryReference==null), it displays:
+ *      - A button for the user to dispose the query and start over again.
  * 
- * Important: In order to display a fragment further down in a component, the query includes the name of the fragment with the spread `...`operator like:
+ *  
+ * 
+ * Important: In order to display a fragment further down in a component, the query includes the name of the fragments with the spread `...`operator like:
  * 
  * ```
- * ...RepositoryHeader_repository
+ * ...RepositoryHeader_repository,
+ * ...IssuesList_repository
  * ````
  * 
- * Relay knows how to deal with this fragment as they are used in the components of the app
+ * Relay knows how to deal with this fragment as they are used in the components of the app.
+ * 
+ * Additionally, the appplication passes the value of the parameter `issuesFirst` through the components hierarchy (see Relay last paragraph of the chapter).
+ * The same job could be eventually done implementing a React Context.
  * 
  * @returns Content of the application
  */
@@ -61,7 +46,7 @@ function App() {
   // State controllers for form inputs
   const { value: owner, bind: bindOwner } = useInput('facebook');
   const { value: name, bind: bindName } = useInput('relay');
-  const {value: issuesFirst, bind: bindIssuesFirst} = useInput('10');
+  const { value: issuesFirst, bind: bindIssuesFirst } = useInput('10');
 
 
   // Define the query
@@ -85,7 +70,7 @@ function App() {
   // Handler function for the form
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    loadQuery({ "owner": owner, "name": name , "issuesFirst": parseInt(issuesFirst)});
+    loadQuery({ "owner": owner, "name": name, "issuesFirst": parseInt(issuesFirst) });
   }
 
 

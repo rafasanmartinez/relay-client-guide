@@ -9,6 +9,8 @@ import DisplayRawdata from "./DisplayRawData";
  * The component calls fo useFragment with the graphql compiled literal that describes the fragment, and the piece of the data into the query that contains the 
  * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`
  * 
+ * The fragment contains a parameter `$issuesFirst` that gets populated at the moment of running the query in the ancestor component `App`.
+ * 
  * Additionally, the fragment contains a child fragment, `IssuesList_issue`. Calling `useFragment` for this fragment also prepares it to be spreaded in the child component `IssueRow`. Not only that,
  * but each element of a list gets transformed using `map` to be displayed, and therefore each member of the list will be spreaded within it´s own instance of `IssueRow`.
  * 
