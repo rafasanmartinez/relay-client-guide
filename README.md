@@ -20,9 +20,9 @@ When reviewing or checking out this code, I would assume that you have already g
 
 This sample is an evolution of [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3), where I have added the use of variables to populate the values of the owner and name of the repository and the lenght of the portion of the issues list that is displayed. The values are obtained from the user through a form.
 
-The application will display some data for the closed issues in the relay repository introduced by the user.
+The application will display some data for the closed issues in the GitHub repository chosen by the user.
 
-Look specifically at the content of the comments in `src/App.js` and `src/components/IssuesList.js` to get a better understanding on the concepts demonstrated.
+Please look specifically at the content of the comments in `src/App.js` and `src/components/IssuesList.js` to get a better understanding on the concepts demonstrated.
 
 If you run the application and you enter input for looking for a repository that does not exists in GitHub, the application will not display meaningful messages. This is an expected beavior. I will provide error control and control of empty results further down in this series.
 
