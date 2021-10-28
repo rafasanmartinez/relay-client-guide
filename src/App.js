@@ -9,6 +9,7 @@ import {
 } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 import ErrorBoundary from './ErrorBoundary';
+import useInput from './helpers/UseInput';
 
 import RepositoryHeader from './components/RepositoryHeader';
 import IssuesList from './components/IssuesList';
@@ -16,36 +17,48 @@ import DisplayRawdata from './components/DisplayRawData';
 
 /**
  * The application:
+ *   - Displays a form to get the parameters from the user
  *   - Initiates a query object
  *   - Obtains a handle to load the Query with useQueryLoader
- *   - The query reference is an instance of the loade query results after if it has been started to be loaded
- *   - If the query has not been loaded yet (queryReference==null), it displays a button for the user to load the query
- *   - Af the query has been loaded already (queryReference==null), it displays:
- *      - A button for the user to dispose the query and start over again, and 
- *      - A DataDisplay component that will display the result of the query by providing to it the query object itself ples the instance of the loaded query results
+ *   - The query reference is an instance of the loaded query results after if it has been started to be loaded
+ *   - When the user submits the data in the form, the application loads the query and display the data fetched.
+ *   - If the query has been loaded already (queryReference==null), it displays:
+ *      - A button for the user to dispose the query and start over again.
  * 
- * Important: In order to display a fragment further down in a component, the query includes the name of the fragment with the spread `...`operator like:
+ *  
+ * 
+ * Important: In order to display a fragment further down in a component, the query includes the name of the fragments with the spread `...`operator like:
  * 
  * ```
- * ...RepositoryHeader_repository
+ * ...RepositoryHeader_repository,
+ * ...IssuesList_repository
  * ````
  * 
- * Relay knows how to deal with this fragment as they are used in the components of the app
+ * Relay knows how to deal with this fragment as they are used in the components of the app.
+ * 
+ * Additionally, the appplication passes the value of the parameter `issuesFirst` through the components hierarchy (see Relay last paragraph of the chapter).
+ * The same job could be eventually done implementing a React Context.
  * 
  * @returns Content of the application
  */
 function App() {
 
-  // Define a query
+  // State controllers for form inputs
+  const { value: owner, bind: bindOwner } = useInput('facebook');
+  const { value: name, bind: bindName } = useInput('relay');
+  const { value: issuesFirst, bind: bindIssuesFirst } = useInput('10');
+
+
+  // Define the query
   const RepositoryNameQuery = graphql`
-query AppRepositoryNameQuery {
-  repository(owner: "facebook", name: "relay") {
+   query AppRepositoryNameQuery($owner:String!, $name:String!, $issuesFirst: Int ) {
+  repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
     ...IssuesList_repository
   }
 }
 `;
-
+  // Obtain a Query Loader
   const [
     queryReference,
     loadQuery,
@@ -54,25 +67,46 @@ query AppRepositoryNameQuery {
     RepositoryNameQuery
   );
 
-  if (queryReference == null) {
-    return (
-      <div className="App-Body">
-        <button onClick={() => loadQuery({})}>Click to reveal the data </button>
-      </div>
-    );
+  // Handler function for the form
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    loadQuery({ "owner": owner, "name": name, "issuesFirst": parseInt(issuesFirst) });
   }
-  else {
-    return (
-      <div className="App-Body">
-        <button onClick={disposeQuery}>
-          Click to hide the data and dispose the query.
-        </button>
-        <Suspense fallback={'Loading...'}>
-          <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} />
-        </Suspense>
-      </div>
-    );
-  }
+
+
+  return (
+    <div className="App-Body">
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginTop: '5px' }}>
+          <label style={{ marginRight: '10px' }}>
+            Repository Owner:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindOwner} />
+          </label>
+          <label style={{ marginRight: '10px' }}>
+            Repository Name:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindName} />
+          </label>
+          <label style={{ marginRight: '10px' }}>
+            Issues to Display:
+            <input type="text" style={{ marginLeft: '5px' }} {...bindIssuesFirst} />
+          </label>
+          <input type="submit" value="Submit" />
+        </div>
+      </form>
+
+      {queryReference != null &&
+        <>
+          <button onClick={disposeQuery}>
+            Click to hide the data and dispose the query.
+          </button>
+          <Suspense fallback={<div>'Loading...'</div>}>
+            <DataDisplay query={RepositoryNameQuery} queryReference={queryReference} issuesToDisplay={issuesFirst} />
+          </Suspense>
+        </>
+      }
+    </div>
+  );
 }
 
 
@@ -92,13 +126,13 @@ query AppRepositoryNameQuery {
  * @param queryReference Reference to the loaded data by the outer component
  * @returns A component that displays the data extracted with the query
  */
-const DataDisplay = ({ query, queryReference }) => {
+const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
 
   const data = usePreloadedQuery(query, queryReference);
   return (
     <>
       <RepositoryHeader data={data} />
-      <IssuesList data={data} />
+      <IssuesList data={data} issuesToDisplay={issuesToDisplay} />
       <DisplayRawdata data={data} contentDescription='raw result of usePreloadedQuery() in the App Component' />
     </>
   )

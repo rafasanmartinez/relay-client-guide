@@ -9,6 +9,8 @@ import DisplayRawdata from "./DisplayRawData";
  * The component calls fo useFragment with the graphql compiled literal that describes the fragment, and the piece of the data into the query that contains the 
  * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`
  * 
+ * The fragment contains a parameter `$issuesFirst` that gets populated at the moment of running the query in the ancestor component `App`.
+ * 
  * Additionally, the fragment contains a child fragment, `IssuesList_issue`. Calling `useFragment` for this fragment also prepares it to be spreaded in the child component `IssueRow`. Not only that,
  * but each element of a list gets transformed using `map` to be displayed, and therefore each member of the list will be spreaded within it´s own instance of `IssueRow`.
  * 
@@ -17,12 +19,12 @@ import DisplayRawdata from "./DisplayRawData";
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment  
  * @returns The resulted React component content
  */
-const IssuesList = ({ data }) => {
+const IssuesList = ({ data, issuesToDisplay }) => {
 
     const fragmentData = useFragment(
         graphql`
         fragment IssuesList_repository on Repository {
-            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:10)
+            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:$issuesFirst)
             {
                 edges
                 {
@@ -45,7 +47,7 @@ const IssuesList = ({ data }) => {
     return (
         <>
             <div style={{ border: '1px solid black', padding: '10px', marginTop: '10px' }}>
-                <div><strong>Total Closed Issues (showing first 10): {fragmentData.issues.totalCount}</strong></div>
+                <div><strong>Total Closed Issues (showing first {issuesToDisplay}): {fragmentData.issues.totalCount}</strong></div>
                 {fragmentData.issues.edges.map(
                     (data) => (
                         <div key={data.cursor} style={{ border: '1px solid black', marginTop: '5px', padding: '5px' }}>
