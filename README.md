@@ -33,7 +33,7 @@ It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs
 - [IssueEdge Object](https://docs.github.com/en/graphql/reference/objects#issueconnection)
 - [Issue Object](https://docs.github.com/en/graphql/reference/objects#issueconnection)
 
-You may also take advantage to look at the use of hooks in React for controlled inputs.
+You may also take advantage and watch in the code how you can use React hooks controlled inputs (see Mentions section below).
 
 ## Configure and run this sample
 
