@@ -54,7 +54,7 @@ function App() {
    query AppRepositoryNameQuery($owner:String!, $name:String!, $issuesFirst: Int ) {
   repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
-    ...IssuesList_repository
+    ...IssuesList_repository @arguments(issuesNumber: $issuesFirst)
   }
 }
 `;
@@ -70,7 +70,7 @@ function App() {
   // Handler function for the form
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    loadQuery({ "owner": owner, "name": name, "issuesFirst": parseInt(issuesFirst) });
+    loadQuery({ "owner": owner, "name": name, "issuesFirst": parseInt(issuesFirst)});
   }
 
 

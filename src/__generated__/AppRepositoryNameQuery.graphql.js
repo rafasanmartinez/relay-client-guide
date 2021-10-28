@@ -35,7 +35,7 @@ query AppRepositoryNameQuery(
 ) {
   repository(owner: $owner, name: $name) {
     ...RepositoryHeader_repository
-    ...IssuesList_repository
+    ...IssuesList_repository_3eY0Ee
     id
   }
 }
@@ -48,7 +48,7 @@ fragment IssuesList_issue on IssueEdge {
   }
 }
 
-fragment IssuesList_repository on Repository {
+fragment IssuesList_repository_3eY0Ee on Repository {
   issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: $issuesFirst) {
     edges {
       cursor
@@ -143,7 +143,13 @@ return {
             "name": "RepositoryHeader_repository"
           },
           {
-            "args": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "issuesNumber",
+                "variableName": "issuesFirst"
+              }
+            ],
             "kind": "FragmentSpread",
             "name": "IssuesList_repository"
           }
@@ -334,16 +340,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3034146ea3aaae92aed3477bee990359",
+    "cacheID": "518404ec438062a5f944af1a8748d79d",
     "id": null,
     "metadata": {},
     "name": "AppRepositoryNameQuery",
     "operationKind": "query",
-    "text": "query AppRepositoryNameQuery(\n  $owner: String!\n  $name: String!\n  $issuesFirst: Int\n) {\n  repository(owner: $owner, name: $name) {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: $issuesFirst) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
+    "text": "query AppRepositoryNameQuery(\n  $owner: String!\n  $name: String!\n  $issuesFirst: Int\n) {\n  repository(owner: $owner, name: $name) {\n    ...RepositoryHeader_repository\n    ...IssuesList_repository_3eY0Ee\n    id\n  }\n}\n\nfragment IssuesList_issue on IssueEdge {\n  node {\n    id\n    title\n    createdAt\n  }\n}\n\nfragment IssuesList_repository_3eY0Ee on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, first: $issuesFirst) {\n    edges {\n      cursor\n      ...IssuesList_issue\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n}\n\nfragment RepositoryHeader_repository on Repository {\n  owner {\n    __typename\n    login\n    id\n  }\n  name\n  nameWithOwner\n  createdAt\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'a2cafb634a2df63c6d70016d80fda8c9';
+(node/*: any*/).hash = 'b15753edfecae61e18be10cec6f9e914';
 
 module.exports = node;

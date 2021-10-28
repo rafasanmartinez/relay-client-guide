@@ -40,8 +40,9 @@ export type IssuesList_repository$key = {
 const node/*: ReaderFragment*/ = {
   "argumentDefinitions": [
     {
-      "kind": "RootArgument",
-      "name": "issuesFirst"
+      "defaultValue": 10,
+      "kind": "LocalArgument",
+      "name": "issuesNumber"
     }
   ],
   "kind": "Fragment",
@@ -54,7 +55,7 @@ const node/*: ReaderFragment*/ = {
         {
           "kind": "Variable",
           "name": "first",
-          "variableName": "issuesFirst"
+          "variableName": "issuesNumber"
         },
         {
           "kind": "Literal",
@@ -152,6 +153,6 @@ const node/*: ReaderFragment*/ = {
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = 'f8e9c0018213db37e965201fbe2fced6';
+(node/*: any*/).hash = 'b4477fa035195b0de41f82026591dd28';
 
 module.exports = node;

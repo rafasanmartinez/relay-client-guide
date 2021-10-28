@@ -23,8 +23,10 @@ const IssuesList = ({ data, issuesToDisplay }) => {
 
     const fragmentData = useFragment(
         graphql`
-        fragment IssuesList_repository on Repository {
-            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:$issuesFirst)
+        fragment IssuesList_repository on Repository 
+            @argumentDefinitions(issuesNumber: {type: Int, defaultValue: 10})
+        {
+            issues(orderBy:{field:CREATED_AT,direction:ASC},states:CLOSED,first:$issuesNumber)
             {
                 edges
                 {
