@@ -24,6 +24,8 @@ The application will display some data for the closed issues in the relay reposi
 
 Look specifically at the content of the comments in `src/App.js` and `src/components/IssuesList.js` to get a better understanding on the concepts demonstrated.
 
+If you run the application and you enter input for looking for a repository that does not exists in GitHub, the application will not display meaningful messages. This is an expected beavior. I will provide error control and control of empty results further down in this series.
+
 It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs.github.com/en/graphql), specially the following entries:
 
 - [Repository Object](https://docs.github.com/en/graphql/reference/objects#repository)
