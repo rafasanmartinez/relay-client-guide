@@ -15,10 +15,11 @@ When reviewing or checking out this code, I would assume that you have already g
 - [rendering-fragments](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments)
 - [rendering-fragments-2](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-2)
 - [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3)
+- [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables)
 
-## Specific to this sample: variables
+## Specific to this sample: variables-2
 
-This sample is an evolution of [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3), where I have added the use of variables to populate the values of the owner and name of the repository and the lenght of the portion of the issues list that is displayed. The values are obtained from the user through a form.
+This sample is an evolution of [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables), but in this case, I have added one argument to the fragment `IssuesList_repository`.
 
 The application will display some data for the closed issues in the GitHub repository chosen by the user.
 
