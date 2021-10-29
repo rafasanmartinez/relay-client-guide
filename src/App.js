@@ -11,7 +11,7 @@ import RelayEnvironment from "./RelayEnvironment";
 import ErrorBoundary from "./ErrorBoundary";
 import useInput from "./helpers/UseInput";
 
-import RepositoryHeader from "./components/RepositoryHeader";
+import RepositoryHeader, {RepositoryHeaderGlimmer} from "./components/RepositoryHeader";
 import IssuesList from "./components/IssuesList";
 import DisplayRawdata from "./components/DisplayRawData";
 
@@ -97,7 +97,7 @@ function App() {
           <button onClick={disposeQuery}>
             Click to hide the data and dispose the query.
           </button>
-          <Suspense fallback={<div>'Loading...'</div>}>
+          <Suspense fallback={<div>'Loading repository data...'</div>}>
             <DataDisplay
               query={RepositoryNameQuery}
               queryReference={queryReference}
@@ -130,7 +130,9 @@ const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
   const data = usePreloadedQuery(query, queryReference);
   return (
     <>
-      <RepositoryHeader data={data} />
+      <Suspense fallback={<RepositoryHeaderGlimmer/>}>
+        <RepositoryHeader data={data} />
+      </Suspense>
       <IssuesList data={data} issuesToDisplay={issuesToDisplay} />
       <DisplayRawdata
         data={data}
