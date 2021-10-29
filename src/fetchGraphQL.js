@@ -3,11 +3,11 @@ async function fetchGraphQL(text, variables) {
   const REACT_APP_GITHUB_AUTH_TOKEN = process.env.REACT_APP_GITHUB_AUTH_TOKEN;
   try {
     // Fetch data from GitHub's GraphQL API:
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
+    const response = await fetch("https://api.github.com/graphql", {
+      method: "POST",
       headers: {
         Authorization: `bearer ${REACT_APP_GITHUB_AUTH_TOKEN}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         query: text,
@@ -19,7 +19,7 @@ async function fetchGraphQL(text, variables) {
     const jsonresponse = await response.json();
     return jsonresponse;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
