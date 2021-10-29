@@ -61,4 +61,11 @@ const RepositoryHeaderFrame = ({ children }) => {
   )
 }
 
+const RepositoryHeaderGlimmer = () => {
+  return (
+    <RepositoryHeaderFrame/>
+  )
+}
+
 export default RepositoryHeader;
+export {RepositoryHeaderGlimmer};

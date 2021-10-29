@@ -16,14 +16,15 @@ When reviewing or checking out this code, I would assume that you have already g
 - [rendering-fragments-2](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-2)
 - [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3)
 - [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables)
+- [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2)
 
-## Specific to this sample: variables-2
+## Specific to this sample: suspense
 
-This sample is an evolution of [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables), but in this case, I have added one argument to the fragment `IssuesList_repository`.
+This sample is an slight evolution of [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2).
+
+In this sample, I have added a possible way of reusing code when building a glimmer for the `RepositoryHeader`component, and I have surrounded such component with `<Suspense>`. The user of the application will not notice any difference with the previous sample, becasue once the query is loaded, the `RepositoryHeader` component displays almost instantaneously.
 
 The application will display some data for the closed issues in the GitHub repository chosen by the user.
-
-Please look specifically at the content of the comments in `src/App.js` and `src/components/IssuesList.js` to get a better understanding on the concepts demonstrated.
 
 If you run the application and you enter input for looking for a repository that does not exists in GitHub, the application will not display meaningful messages. This is an expected beavior. I will provide error control and control of empty results further down in this series.
 
