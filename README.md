@@ -17,10 +17,13 @@ When reviewing or checking out this code, I would assume that you have already g
 - [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3)
 - [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables)
 - [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2)
+- [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/suspense)
 
-## Specific to this sample: suspense
+## Specific to this sample: error-boundaries
 
-This sample is an slight evolution of [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2).
+This sample is a copy of [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2) with onlly one difference. I have added an object state variable with the number of issue records to display to avoid the issues list header to get update with every modification of the form field.
+
+The reason for not modifying the project at this point is that the application already
 
 In this sample, I have added a possible way of reusing code when building a glimmer for the `RepositoryHeader`component, and I have surrounded such component with `<Suspense>`. The user of the application will not notice any difference with the previous sample, becasue once the query is loaded, the `RepositoryHeader` component displays almost instantaneously.
 

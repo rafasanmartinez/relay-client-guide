@@ -1,17 +1,17 @@
 // your-app-name/src/App.js
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import "./App.css";
 import graphql from "babel-plugin-relay/macro";
 import {
   RelayEnvironmentProvider,
   useQueryLoader,
-  usePreloadedQuery,
+  usePreloadedQuery
 } from "react-relay/hooks";
 import RelayEnvironment from "./RelayEnvironment";
 import ErrorBoundary from "./ErrorBoundary";
 import useInput from "./helpers/UseInput";
 
-import RepositoryHeader, {RepositoryHeaderGlimmer} from "./components/RepositoryHeader";
+import RepositoryHeader, { RepositoryHeaderGlimmer } from "./components/RepositoryHeader";
 import IssuesList from "./components/IssuesList";
 import DisplayRawdata from "./components/DisplayRawData";
 
@@ -45,6 +45,12 @@ function App() {
   const { value: name, bind: bindName } = useInput("relay");
   const { value: issuesFirst, bind: bindIssuesFirst } = useInput("10");
 
+  // Stores the number of issues requested
+  const [issuesRequested, setIssuesRequested] = useState(null);
+
+  // Stores if query needs to be refhreshed after error
+  const [needsRefresh, setNeedsRefresh] = useState(false);
+
   // Define the query
   const RepositoryNameQuery = graphql`
     query AppRepositoryNameQuery(
@@ -65,7 +71,13 @@ function App() {
   // Handler function for the form
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) });
+    // Set the fetch policy to discard the data in the store and get it again from the network if there was
+    // an error fetching the data
+    const fetchPolicy = needsRefresh ? 'network-only' : 'store-or-network';
+    loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) }, { fetchPolicy: fetchPolicy });
+
+    // Set the number of issues requested to be displayed in the page
+    setIssuesRequested(issuesFirst);
   };
 
   return (
@@ -91,7 +103,6 @@ function App() {
           <input type="submit" value="Submit" />
         </div>
       </form>
-
       {queryReference != null && (
         <>
           <button onClick={disposeQuery}>
@@ -101,7 +112,8 @@ function App() {
             <DataDisplay
               query={RepositoryNameQuery}
               queryReference={queryReference}
-              issuesToDisplay={issuesFirst}
+              issuesToDisplay={issuesRequested}
+              setNeedsRefresh={setNeedsRefresh}
             />
           </Suspense>
         </>
@@ -126,11 +138,20 @@ function App() {
  * @param queryReference Reference to the loaded data by the outer component
  * @returns A component that displays the data extracted with the query
  */
-const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
+const DataDisplay = ({ query, queryReference, issuesToDisplay, setNeedsRefresh}) => {
   const data = usePreloadedQuery(query, queryReference);
+
+  if (data.repository == null) {
+    // We tell to the paren component that the query needs to be refreshed from the network
+    setNeedsRefresh(true);
+    return (
+      <div>There is not data for the repository with the parameters that you entered</div>
+    )
+  }
+
   return (
     <>
-      <Suspense fallback={<RepositoryHeaderGlimmer/>}>
+      <Suspense fallback={<RepositoryHeaderGlimmer />}>
         <RepositoryHeader data={data} />
       </Suspense>
       <IssuesList data={data} issuesToDisplay={issuesToDisplay} />
@@ -139,7 +160,7 @@ const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
         contentDescription="raw result of usePreloadedQuery() in the App Component"
       />
     </>
-  );
+  )
 };
 
 /**
