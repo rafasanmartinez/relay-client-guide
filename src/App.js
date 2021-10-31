@@ -1,5 +1,5 @@
 // your-app-name/src/App.js
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import "./App.css";
 import graphql from "babel-plugin-relay/macro";
 import {
@@ -48,7 +48,7 @@ function App() {
   // Stores the number of issues requested
   const [issuesRequested, setIssuesRequested] = useState(null);
 
-  // Stores if query needs to be refhreshed after error
+  // Stores if query needs to be refreshed from the network after error
   const [needsRefresh, setNeedsRefresh] = useState(false);
 
   // Define the query
@@ -64,15 +64,17 @@ function App() {
       }
     }
   `;
+
   // Obtain a Query Loader
   const [queryReference, loadQuery, disposeQuery] =
     useQueryLoader(RepositoryNameQuery);
 
-  // Handler function for the form
+  // Handler function that triggers when the form gets submitted
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
     // Set the fetch policy to discard the data in the store and get it again from the network if there was
-    // an error fetching the data
+    // a previous error fetching the data
     const fetchPolicy = needsRefresh ? 'network-only' : 'store-or-network';
     loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) }, { fetchPolicy: fetchPolicy });
 
@@ -138,12 +140,20 @@ function App() {
  * @param queryReference Reference to the loaded data by the outer component
  * @returns A component that displays the data extracted with the query
  */
-const DataDisplay = ({ query, queryReference, issuesToDisplay, setNeedsRefresh}) => {
+const DataDisplay = ({ query, queryReference, issuesToDisplay, setNeedsRefresh }) => {
+
+  // Get the data from the prelosded query
   const data = usePreloadedQuery(query, queryReference);
 
+  // The need to refresh from the netwotk gets passed to the parent component afer rendering
+  // You can give a try to comment this function and will find out that no more data gets
+  // displayed after an error occurs
+  useEffect(() => {
+    setNeedsRefresh(data.repository == null);
+  },[data.repository,setNeedsRefresh]);
+
+  // 
   if (data.repository == null) {
-    // We tell to the paren component that the query needs to be refreshed from the network
-    setNeedsRefresh(true);
     return (
       <div>There is not data for the repository with the parameters that you entered</div>
     )
