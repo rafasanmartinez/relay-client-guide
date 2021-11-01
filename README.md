@@ -19,14 +19,45 @@ When reviewing or checking out this code, I would assume that you have already g
 - [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2)
 - [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/suspense)
 - [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
+- [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies)
+
 
 It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
-## Specific to this sample: fetch-policies
+## Specific to this sample: presence-of-data-1
 
-This sample is an evolution of [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries).
+This sample is an evolution of [error-boundariesfetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies).
 
-For this evolution, I have just added a I have an user selection input so the user can determine what will be the fetch policy to apply to the query.
+For this evolution, I have just added the parameter  `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
+
+The purpose of this demonstration is to help you to experiment with the React's Garbage Collection configuration, concretely by playing with the parameter mentioned above.
+
+In order to play with this sample, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
+
+Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
+
+[image Page initially loaded](/readme-images/InitialExecution.png)
+
+Run the query hitting the `Submit`button. The Store gets populated with data.
+
+[image Query executed](/readme-images/Execution.png)
+
+Click the button `Click to hide the data and dispose the query`
+
+[image Query disposed](/readme-images/AfterQueryDisposal.png)
+
+You can see that the data in the Store has dissapeared from the query.
+
+Now is your turn to play with the `gcReleaseBufferSize` parameter.
+
+
+```
+// Export a singleton instance of Relay Environment configured with our network function:
+export default new Environment({
+  network: Network.create(fetchRelay),
+  store: new Store(new RecordSource(),{gcReleaseBufferSize:0}),
+});
+```
 
 I have removed the mechanism to force `network-only` upon error of the sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries) so you can freely experiment with the effects of modifying the fetch policy.
 
