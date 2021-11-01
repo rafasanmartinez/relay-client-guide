@@ -18,54 +18,26 @@ When reviewing or checking out this code, I would assume that you have already g
 - [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables)
 - [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2)
 - [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/suspense)
+- [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
 
-## Specific to this sample: error-boundaries
+It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension.
 
-This sample is an evolution of [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2), where I deal with the error condition returned by the GitHub GraphQL API when the query sent produces an error object with an `EXCESIVE_PAGINATION` or a `NOT_FOUND` error type, and a `null` value for the `repository` object. You can see how the data returned by GitHub looks in the browser console by uncommenting the `console.log(jsonresponse);` line in `fetchGraphQL.js`.
+## Specific to this sample: fetch-policies
 
-Well, it all seems like this version of `Relay` does not pay attention to the `error` document returned by a GraphQL server within the data. `Relay` will only trigger an error that an `ErrorBoundary` component will trap when a throwed JS error occurs during the fetching and rendering process. Information of the type "Object Foo is not found", "Option Bar does not exist", "Excessive pagination" and so on, is expected to be returned by a GraphQL server as part of the regular data, and they state that the server should expose `union types` that sould return the expected datatype content (`Foo`) upon success, or an `Error` object with a meaningful message or a code upon error. This is stated in in the `Relay` documentation in the las section `Accessing errors in GraphQL Responses` of the [Error States with ErrorBoundaries](https://relay.dev/docs/guided-tour/rendering/error-states/) chapter.
+This sample is an evolution of [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries).
 
-There is some discussion about this question in [this issue](https://github.com/facebook/relay/issues/1913).
+For this evolution, I have just added a I have an user selection input so the user can determine what will be the fetch policy to apply to the query.
 
-I am using the GitHub GraphQL server as the source of data for this project, and as you can see, this GraphQL server does not implement these kind of errors as `Relay` expects.
+I have removed the mechanism to force `network-only` upon error of the sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries) so you can freely experiment with the effects of modifying the fetch policy.
 
-It means that when I provide query parameter values that produce one of these errors, the only information that I obtain from `Relay` is that the object expected is `null`. My decision at this point is to go ahead with this behavior and try to provide a way to deal with it, event though I assume that the information that I can provide to the user is not going to be as detailed as I would like it to be.
+There are a couple of experiments that you can do:
 
-What I have done is to have the component `DataDisplay` in `App.js` to render a generic error message when it detects that the `repository`object is `null`.
+1. Run your first query using `store-only`. You will find that no data is displayed in the page. This makes sense, since there is nothing catched in the `Store` yet.
+2. Then run a query using `store-or-netork` fetch policy. The first time that you do it, you will see the `Loading...` suspense fallback, since the query is going to the network to get the data.
+3. Run the same query again. You will no see the suspense fallback, because the data is already catched in the `Store`.
+4. Run the same query, but this time using `network-only`. This time, you will see the suspense fallback, because you are forcing the query to get the data from the network.
+5. Play with entering entries that will produce an error (see sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)), and you will find that you will need to force `network-only` after entering a pagination (Issues to Display) bigger than 100 to see data again.
 
-This design produced the following behavior in `Relay`: after rendering this generic message, for some reason, the next time that the user clicks on `Submit`, I have to obtain the query from the network in the subsequent fetch,  or no data will be displayed. My solution to this has been to modify the fetching policy when this happens. I am not sure if this behavior is caused by is a bug or not, but that´s another discussion.
-
-To wok around this issue, what I did is to have my `DataDisplay` component to notify to the parent `App` that it has to refresh the data from the network. See the following code fragments in `App.js` that implement this feature:
-
-`App` component:
-
-```
-// Stores if query needs to be refreshed from the network after error
-const [needsRefresh, setNeedsRefresh] = useState(false);
-```
-```
-const fetchPolicy = needsRefresh ? 'network-only' : 'store-or-network';
-loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) }, { fetchPolicy: fetchPolicy });
-```
-```
-<DataDisplay
-    query={RepositoryNameQuery}
-    queryReference={queryReference}
-    issuesToDisplay={issuesRequested}
-    setNeedsRefresh={setNeedsRefresh}
-/>
-```
-
-`DataDisplay` component:
-
-```
-// The need to refresh from the netwotk gets passed to the parent component afer rendering
-// You can give a try to comment this function and will find out that no more data gets
-// displayed after an error occurs
-useEffect(() => {
-setNeedsRefresh(data.repository == null);
-},[data.repository,setNeedsRefresh]);
-```
 
 It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs.github.com/en/graphql), specially the following entries:
 

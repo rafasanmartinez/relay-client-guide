@@ -44,12 +44,15 @@ function App() {
   const { value: owner, bind: bindOwner } = useInput("facebook");
   const { value: name, bind: bindName } = useInput("relay");
   const { value: issuesFirst, bind: bindIssuesFirst } = useInput("10");
+  const { value: fetchPolicy, bind: bindFetchPolicy } = useInput("store-or-network");
 
   // Stores the number of issues requested
   const [issuesRequested, setIssuesRequested] = useState(null);
 
   // Stores if query needs to be refreshed from the network after error
+  // (I am not using it now in favor of user selection for ilustration of this sample purposes. You will see the warning in the browser console.)
   const [needsRefresh, setNeedsRefresh] = useState(false);
+
 
   // Define the query
   const RepositoryNameQuery = graphql`
@@ -72,11 +75,17 @@ function App() {
   // Handler function that triggers when the form gets submitted
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    console.log(fetchPolicy);
+
+    // The fetch policy to use is the one selected by the user
+    const fetchPolicyForQuery = fetchPolicy;
 
     // Set the fetch policy to discard the data in the store and get it again from the network if there was
     // a previous error fetching the data
-    const fetchPolicy = needsRefresh ? 'network-only' : 'store-or-network';
-    loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) }, { fetchPolicy: fetchPolicy });
+    // Not i use for this sample in favor of user´s selection of policy
+    //const fetchPolicy = needsRefresh ? 'network-only' : 'store-or-network';
+
+    loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) }, { fetchPolicy: fetchPolicyForQuery });
 
     // Set the number of issues requested to be displayed in the page
     setIssuesRequested(issuesFirst);
@@ -102,6 +111,13 @@ function App() {
               {...bindIssuesFirst}
             />
           </label>
+          <label style={{ marginRight: "10px" }}>Fetch Policy:</label>
+          <select id="fetchPolicy" name="fetchPolicy" style={{ marginRight: "5px" }} {...bindFetchPolicy}>
+            <option value="store-or-network">store-or-network</option>
+            <option value="store-and-network">store-and-network</option>
+            <option value="network-only">network-only</option>
+            <option value="store-only">store-only</option>
+          </select>
           <input type="submit" value="Submit" />
         </div>
       </form>
@@ -150,7 +166,7 @@ const DataDisplay = ({ query, queryReference, issuesToDisplay, setNeedsRefresh }
   // displayed after an error occurs
   useEffect(() => {
     setNeedsRefresh(data.repository == null);
-  },[data.repository,setNeedsRefresh]);
+  }, [data.repository, setNeedsRefresh]);
 
   // 
   if (data.repository == null) {
