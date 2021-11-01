@@ -46,30 +46,15 @@ Try the sample, and execute the query with Relay Developer Tools opened in the S
 
 <img src="/readme-images/InitialExecution.png?raw=true">
 
-Run the query hitting the `Submit`button. The Store gets populated with data.
+Run the query hitting the `Submit`button. The store gets populated with data of the loaded query.
 
 <img src="/readme-images/Execution.png?raw=true">
 
-Click the button `Click to hide the data and dispose the query` and you can see that the data in the Store has dissapeared from the query.
+Click the button `Click to hide the data and dispose the query` and you can see that the data in the store has dissapeared.
 
 <img src="/readme-images/AfterQueryDisposal.png?raw=true">
 
-Now is your turn to play with the `gcReleaseBufferSize` parameter.
-
-
-
-
-I have removed the mechanism to force `network-only` upon error of the sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries) so you can freely experiment with the effects of modifying the fetch policy.
-
-There are a couple of experiments that you can do:
-
-1. Run your first query using `store-only`. You will find that no data is displayed in the page. This makes sense, since there is nothing catched in the `Store` yet.
-2. Then run a query using `store-or-netork` fetch policy. The first time that you do it, you will see the `Loading...` suspense fallback, since the query is going to the network to get the data.
-3. Run the same query again. You will no see the suspense fallback, because the data is already catched in the `Store`.
-4. Run the same query, but this time using `network-only`. This time, you will see the suspense fallback, because you are forcing the query to get the data from the network.
-5. Play with entering entries that will produce an error (see sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)), and you will find that you will need to force `network-only` after entering a pagination(Issues to Display) bigger than 100 to see data again.
-6. Run another query, and make sure that it has data for both the header and the issues list. Now, modify the number of issues to display, and set the getch policy to stoer-only. You will find that there are not issues to display. This is because there event though there is data in the `Store` for the repository header, there is not data in the `Store` yet for a `IssueConnection` object with the new parameters supplied.
-
+Now is your turn to play with the `gcReleaseBufferSize` parameter and the fetch policies.
 
 It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs.github.com/en/graphql), specially the following entries:
 
