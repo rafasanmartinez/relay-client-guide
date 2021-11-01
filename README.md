@@ -37,6 +37,7 @@ In order to play with this sample, you should to install the [Relay Developer To
 Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
 
 [image Page initially loaded](/readme-images/InitialExecution.png)
+<img src="/readme-images/InitialExecution.png?raw=true">
 
 Run the query hitting the `Submit`button. The Store gets populated with data.
 
