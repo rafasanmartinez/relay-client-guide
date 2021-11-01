@@ -26,7 +26,7 @@ It will be interesting for you to inspect the internals of the `Store` by instal
 
 ## Specific to this sample: presence-of-data-1
 
-This sample is an evolution of [error-boundariesfetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies).
+This sample is an evolution of [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies).
 
 For this evolution, I have just added the parameter  `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
 
@@ -40,7 +40,7 @@ export default new Environment({
 
 The purpose of this demonstration is to help you to experiment with the React's Garbage Collection configuration, concretely by playing with the parameter mentioned above. I have set the parameter value to 0, in order to prevent the garbage collector to retain the information of in the release buffer.
 
-In order to play with this sample, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
+In order to see what is going on with the relay store, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
 
 Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
 
