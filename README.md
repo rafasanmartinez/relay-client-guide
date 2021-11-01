@@ -20,7 +20,7 @@ When reviewing or checking out this code, I would assume that you have already g
 - [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/suspense)
 - [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
 
-It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension.
+It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
 ## Specific to this sample: fetch-policies
 
