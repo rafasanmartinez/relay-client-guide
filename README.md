@@ -30,28 +30,6 @@ This sample is an evolution of [error-boundariesfetch-policies](https://github.c
 
 For this evolution, I have just added the parameter  `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
 
-The purpose of this demonstration is to help you to experiment with the React's Garbage Collection configuration, concretely by playing with the parameter mentioned above.
-
-In order to play with this sample, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
-
-Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
-
-[image Page initially loaded](/readme-images/InitialExecution.png)
-<img src="/readme-images/InitialExecution.png?raw=true">
-
-Run the query hitting the `Submit`button. The Store gets populated with data.
-
-[image Query executed](/readme-images/Execution.png)
-
-Click the button `Click to hide the data and dispose the query`
-
-[image Query disposed](/readme-images/AfterQueryDisposal.png)
-
-You can see that the data in the Store has dissapeared from the query.
-
-Now is your turn to play with the `gcReleaseBufferSize` parameter.
-
-
 ```
 // Export a singleton instance of Relay Environment configured with our network function:
 export default new Environment({
@@ -59,6 +37,27 @@ export default new Environment({
   store: new Store(new RecordSource(),{gcReleaseBufferSize:0}),
 });
 ```
+
+The purpose of this demonstration is to help you to experiment with the React's Garbage Collection configuration, concretely by playing with the parameter mentioned above. I have set the parameter value to 0, in order to prevent the garbage collector to retain the information of in the release buffer.
+
+In order to play with this sample, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
+
+Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
+
+<img src="/readme-images/InitialExecution.png?raw=true">
+
+Run the query hitting the `Submit`button. The Store gets populated with data.
+
+<img src="/readme-images/Execution.png?raw=true">
+
+Click the button `Click to hide the data and dispose the query` and you can see that the data in the Store has dissapeared from the query.
+
+<img src="/readme-images/AfterQueryDisposal.png?raw=true">
+
+Now is your turn to play with the `gcReleaseBufferSize` parameter.
+
+
+
 
 I have removed the mechanism to force `network-only` upon error of the sample [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries) so you can freely experiment with the effects of modifying the fetch policy.
 
