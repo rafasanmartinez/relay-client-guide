@@ -46,11 +46,8 @@ const IssuesList = ({ data, issuesToDisplay }) => {
     data.repository
   );
 
-  if(fragmentData.issues == null)
-  {
-    return (
-      <div>There is not data for the issues of this repository</div>
-    )
+  if (fragmentData.issues == null) {
+    return <div>There is not data for the issues of this repository</div>;
   }
 
   return (

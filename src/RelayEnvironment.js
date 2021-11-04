@@ -9,8 +9,9 @@ async function fetchRelay(params, variables) {
   return fetchGraphQL(params.text, variables);
 }
 
-// Export a singleton instance of Relay Environment configured with our network function:
+// Export a singleton instance of Relay Environment configured with our network function
+// Added the argument `gcReleaseBufferSize: 0`to make evident the use of query retention and disposition in the app
 export default new Environment({
   network: Network.create(fetchRelay),
-  store: new Store(new RecordSource(),{gcReleaseBufferSize:0}),
+  store: new Store(new RecordSource(), { gcReleaseBufferSize: 0 }),
 });

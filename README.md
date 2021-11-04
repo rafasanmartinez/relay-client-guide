@@ -21,14 +21,13 @@ When reviewing or checking out this code, I would assume that you have already g
 - [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
 - [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies)
 
-
 It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
-## Specific to this sample: presence-of-data
+## Specific to this sample: presence-of-data-2
 
-This sample is an evolution of [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies).
+This sample is an evolution of [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data).
 
-For this evolution, I have just added the parameter  `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
+For this evolution, I have added the parameter `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
 
 ```
 // Export a singleton instance of Relay Environment configured with our network function:
@@ -38,7 +37,7 @@ export default new Environment({
 });
 ```
 
-The purpose of this demonstration is to help you to experiment with the React's Garbage Collection configuration, concretely by playing with the parameter mentioned above. I have set the parameter value to 0, in order to prevent the garbage collector to retain the information of in the release buffer.
+Additionally, I maintain a list of retained operations in the `App` component state, so you can experiment with query retention feature. You can see the code in `App.js`.
 
 In order to see what is going on with the relay store, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
 
@@ -77,6 +76,7 @@ This project connects to the Github GraphQL server. You can find information abo
 ```sh
 REACT_APP_GITHUB_AUTH_TOKEN=(YOUR TOKEN)
 ```
+
 - Do `npm run relay`
 - Do `npm start`.
 
