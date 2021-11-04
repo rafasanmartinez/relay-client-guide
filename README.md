@@ -42,20 +42,6 @@ Additionally, I maintain a list of retained operations in the `App` component st
 
 In order to see what is going on with the relay store, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
 
-Try the sample, and execute the query with Relay Developer Tools opened in the Store tab.
-
-<img src="/readme-images/InitialExecution.png?raw=true">
-
-Run the query hitting the `Submit`button. The store gets populated with data of the loaded query.
-
-<img src="/readme-images/Execution.png?raw=true">
-
-Click the button `Click to hide the data and dispose the query` and you can see that the data in the store has dissapeared.
-
-<img src="/readme-images/AfterQueryDisposal.png?raw=true">
-
-Now is your turn to play with the `gcReleaseBufferSize` parameter and the fetch policies.
-
 It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs.github.com/en/graphql), specially the following entries:
 
 - [Repository Object](https://docs.github.com/en/graphql/reference/objects#repository)
