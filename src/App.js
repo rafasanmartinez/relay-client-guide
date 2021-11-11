@@ -1,17 +1,21 @@
 // your-app-name/src/App.js
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import "./App.css";
 import graphql from "babel-plugin-relay/macro";
 import {
   RelayEnvironmentProvider,
   useQueryLoader,
   usePreloadedQuery,
+  useRelayEnvironment,
 } from "react-relay/hooks";
+import { createOperationDescriptor } from "relay-runtime";
 import RelayEnvironment from "./RelayEnvironment";
 import ErrorBoundary from "./ErrorBoundary";
 import useInput from "./helpers/UseInput";
 
-import RepositoryHeader, {RepositoryHeaderGlimmer} from "./components/RepositoryHeader";
+import RepositoryHeader, {
+  RepositoryHeaderGlimmer,
+} from "./components/RepositoryHeader";
 import IssuesList from "./components/IssuesList";
 import DisplayRawdata from "./components/DisplayRawData";
 
@@ -22,6 +26,7 @@ import DisplayRawdata from "./components/DisplayRawData";
  *   - Obtains a handle to load the Query with useQueryLoader
  *   - The query reference is an instance of the loaded query results after if it has been started to be loaded
  *   - When the user submits the data in the form, the application loads the query and display the data fetched.
+ *   - A list of retained queries, that the user can dispose.
  *   - If the query has been loaded already (queryReference==null), it displays:
  *      - A button for the user to dispose the query and start over again.
  *
@@ -33,7 +38,7 @@ import DisplayRawdata from "./components/DisplayRawData";
  * ````
  * In this example, the `IssuesList_repository` fragment includes an argument `isuesNumber` that gets populated with the input
  * entered through the variable `$issuesFirst`
- * 
+ *
  * Additionally, the appplication includes the reference to the argument  the value of the parameter `issuesFirst` through the components hierarchy (see Relay last paragraph of the chapter).
  * The same job could be eventually done implementing a React Context.
  *
@@ -44,6 +49,19 @@ function App() {
   const { value: owner, bind: bindOwner } = useInput("facebook");
   const { value: name, bind: bindName } = useInput("relay");
   const { value: issuesFirst, bind: bindIssuesFirst } = useInput("10");
+  const { value: fetchPolicy, bind: bindFetchPolicy } =
+    useInput("store-or-network");
+
+  // Stores the number of issues requested
+  const [issuesRequested, setIssuesRequested] = useState(null);
+
+  // Stores if query needs to be refreshed from the network after error
+  // I am not the value it now in favor of user manipulation of the store for the ilustration of this sample. You will see the warning in the browser console.
+  //See [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries) for a better reference.
+  const [needsRefresh, setNeedsRefresh] = useState(false);
+
+  // Add a map to store the active operation queries for whom I want to control theyr retention
+  const [disposableMap, setDisposableMap] = useState(new Map());
 
   // Define the query
   const RepositoryNameQuery = graphql`
@@ -57,11 +75,21 @@ function App() {
       }
     }
   `;
+
+  // REquired for the retention operations
+  const environment = useRelayEnvironment();
+
   // Obtain a Query Loader
   const [queryReference, loadQuery, disposeQuery] =
     useQueryLoader(RepositoryNameQuery);
 
-  // Handler function for the form
+  const variables = {
+    owner: owner,
+    name: name,
+    issuesFirst: parseInt(issuesFirst),
+  };
+
+  // Handler function that triggers when the form gets submitted
   const handleSubmit = (evt) => {
     evt.preventDefault();
     loadQuery({ owner: owner, name: name});
@@ -87,20 +115,39 @@ function App() {
               {...bindIssuesFirst}
             />
           </label>
+          <label style={{ marginRight: "10px" }}>Fetch Policy:</label>
+          <select
+            id="fetchPolicy"
+            name="fetchPolicy"
+            style={{ marginRight: "5px" }}
+            {...bindFetchPolicy}
+          >
+            <option value="store-or-network">store-or-network</option>
+            <option value="store-and-network">store-and-network</option>
+            <option value="network-only">network-only</option>
+            <option value="store-only">store-only</option>
+          </select>
           <input type="submit" value="Submit" />
         </div>
       </form>
+
+      <DisposableQueriesControlList
+        disposableMap={disposableMap}
+        setDisposableMap={setDisposableMap}
+      />
 
       {queryReference != null && (
         <>
           <button onClick={disposeQuery}>
             Click to hide the data and dispose the query.
           </button>
+
           <Suspense fallback={<div>'Loading repository data...'</div>}>
             <DataDisplay
               query={RepositoryNameQuery}
               queryReference={queryReference}
-              issuesToDisplay={issuesFirst}
+              issuesToDisplay={issuesRequested}
+              setNeedsRefresh={setNeedsRefresh}
             />
           </Suspense>
         </>
@@ -108,6 +155,39 @@ function App() {
     </div>
   );
 }
+
+/**
+ * This component accepts a map with retained operations and the callback to handle its state. For each member of the map, the component displays a button
+ * that allows the user to dispose the operation and delete it from the map.
+ * @param disposableMap The map with the retained operations
+ * @param setDisposableMap The callback function to set the new state of the map
+ * @returns The component
+ */
+const DisposableQueriesControlList = (props) => {
+  return [...props.disposableMap.keys()].map((key) => (
+    <div
+      key={key}
+      style={{
+        border: "1px solid black",
+        marginTop: "5px",
+        padding: "5px",
+      }}
+    >
+      <button
+        onClick={() => {
+          props.disposableMap.get(key).dispose();
+          props.setDisposableMap((prevmap) => {
+            const newMap = new Map([...prevmap]);
+            newMap.delete(key);
+            return newMap;
+          });
+        }}
+      >
+        Dispose query {key}
+      </button>
+    </div>
+  ));
+};
 
 /**
  * This component accepts a query object and a query reference object described in the component App, and
@@ -125,11 +205,37 @@ function App() {
  * @param queryReference Reference to the loaded data by the outer component
  * @returns A component that displays the data extracted with the query
  */
-const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
+const DataDisplay = ({
+  query,
+  queryReference,
+  issuesToDisplay,
+  setNeedsRefresh,
+}) => {
+  // Get the data from the prelosded query
   const data = usePreloadedQuery(query, queryReference);
+
+  const environment = useRelayEnvironment();
+
+  // The need to refresh from the netwotk gets passed to the parent component afer rendering
+  // You can give a try to comment this function and will find out that no more data gets
+  // displayed after an error occurs
+  useEffect(() => {
+    setNeedsRefresh(data.repository == null);
+  }, [data.repository, setNeedsRefresh]);
+
+  //
+  if (data.repository == null) {
+    return (
+      <div>
+        There is not data for the repository with the parameters that you
+        entered
+      </div>
+    );
+  }
+
   return (
     <>
-      <Suspense fallback={<RepositoryHeaderGlimmer/>}>
+      <Suspense fallback={<RepositoryHeaderGlimmer />}>
         <RepositoryHeader data={data} />
       </Suspense>
       <IssuesList parentData={data} issuesToDisplay={issuesToDisplay} />

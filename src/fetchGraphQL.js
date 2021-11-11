@@ -17,6 +17,7 @@ async function fetchGraphQL(text, variables) {
 
     // Get the response as JSON
     const jsonresponse = await response.json();
+    //console.log(jsonresponse);
     return jsonresponse;
   } catch (error) {
     console.log(error);

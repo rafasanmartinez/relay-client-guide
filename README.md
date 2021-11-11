@@ -17,16 +17,30 @@ When reviewing or checking out this code, I would assume that you have already g
 - [rendering-fragments-3](https://github.com/rafasanmartinez/relay-client-guide/tree/rendering-fragments-3)
 - [variables](https://github.com/rafasanmartinez/relay-client-guide/tree/variables)
 - [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2)
+- [suspense](https://github.com/rafasanmartinez/relay-client-guide/tree/suspense)
+- [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
+- [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies)
+- [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data)
 
-## Specific to this sample: suspense
+It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
-This sample is an slight evolution of [variables-2](https://github.com/rafasanmartinez/relay-client-guide/tree/variables-2).
+## Specific to this sample: presence-of-data-2
 
-In this sample, I have added a possible way of reusing code when building a glimmer for the `RepositoryHeader`component, and I have surrounded such component with `<Suspense>`. The user of the application will not notice any difference with the previous sample, becasue once the query is loaded, the `RepositoryHeader` component displays almost instantaneously.
+This sample is an evolution of [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data).
 
-The application will display some data for the closed issues in the GitHub repository chosen by the user.
+For this evolution, I have added the parameter `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
 
-If you run the application and you enter input for looking for a repository that does not exists in GitHub, the application will not display meaningful messages. This is an expected beavior. I will provide error control and control of empty results further down in this series.
+```
+// Export a singleton instance of Relay Environment configured with our network function:
+export default new Environment({
+  network: Network.create(fetchRelay),
+  store: new Store(new RecordSource(),{gcReleaseBufferSize:0}),
+});
+```
+
+Additionally, I maintain a list of retained operations in the `App` component state, so you can experiment with query retention feature. You can see the code in `App.js`.
+
+In order to see what is going on with the relay store, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
 
 It will be very useful to see the [GitHub´s GraphQL API Reference](https://docs.github.com/en/graphql), specially the following entries:
 
@@ -49,6 +63,7 @@ This project connects to the Github GraphQL server. You can find information abo
 ```sh
 REACT_APP_GITHUB_AUTH_TOKEN=(YOUR TOKEN)
 ```
+
 - Do `npm run relay`
 - Do `npm start`.
 
