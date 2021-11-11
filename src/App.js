@@ -50,11 +50,10 @@ function App() {
     query AppRepositoryNameQuery(
       $owner: String!
       $name: String!
-      $issuesFirst: Int
     ) {
       repository(owner: $owner, name: $name) {
         ...RepositoryHeader_repository
-        ...IssuesList_repository @arguments(issuesNumber: $issuesFirst)
+        ...IssuesList_repository
       }
     }
   `;
@@ -65,7 +64,7 @@ function App() {
   // Handler function for the form
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    loadQuery({ owner: owner, name: name, issuesFirst: parseInt(issuesFirst) });
+    loadQuery({ owner: owner, name: name});
   };
 
   return (
@@ -133,7 +132,7 @@ const DataDisplay = ({ query, queryReference, issuesToDisplay }) => {
       <Suspense fallback={<RepositoryHeaderGlimmer/>}>
         <RepositoryHeader data={data} />
       </Suspense>
-      <IssuesList data={data} issuesToDisplay={issuesToDisplay} />
+      <IssuesList parentData={data} issuesToDisplay={issuesToDisplay} />
       <DisplayRawdata
         data={data}
         contentDescription="raw result of usePreloadedQuery() in the App Component"

@@ -1,6 +1,8 @@
-import { useFragment } from "react-relay";
+import { useFragment, usePaginationFragment } from "react-relay";
 import graphql from "babel-plugin-relay/macro";
 import DisplayRawdata from "./DisplayRawData";
+import { useCallback } from "react";
+//import { usePaginationFragment } from "react-relay/hooks";
 
 /**
  * This component displays a list of the issues in the  Repository given the result of a loaded query, that contains
@@ -19,19 +21,26 @@ import DisplayRawdata from "./DisplayRawData";
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment
  * @returns The resulted React component content
  */
-const IssuesList = ({ data, issuesToDisplay }) => {
-  const fragmentData = useFragment(
+const IssuesList = ({ parentData, issuesToDisplay }) => {
+  const response = usePaginationFragment(
     graphql`
       fragment IssuesList_repository on Repository
-      @argumentDefinitions(issuesNumber: { type: Int, defaultValue: 10 }) {
+      @argumentDefinitions(
+        cursor: { type: "String" }
+        count: { type: "Int", defaultValue: 10 }
+      )
+      @refetchable(queryName: "IssuesPaginationQuery") {
         issues(
           orderBy: { field: CREATED_AT, direction: ASC }
           states: CLOSED
-          first: $issuesNumber
-        ) {
+          after: $cursor
+          first: $count
+        ) @connection(key: "Issues_issues") {
           edges {
-            cursor
-            ...IssuesList_issue
+            __id
+            node {
+              ...IssuesListItem_issue
+            }
           }
           pageInfo {
             startCursor
@@ -43,9 +52,22 @@ const IssuesList = ({ data, issuesToDisplay }) => {
         }
       }
     `,
-    data.repository
+    parentData.repository
   );
+  const { data, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious, loadNext, loadPrevious, refetch } = response;
+  console.log("Reponse from pagination:")
+  console.log(response);
+  console.log("Issues List Fragment Data:");
+  console.log(data);
 
+  const loadMore = useCallback(() => {
+    // Don't fetch again if we're already loading the next page
+    if (isLoadingNext) {
+      return;
+    }
+    loadNext(10);
+  }, [isLoadingNext, loadNext]);
+  
   return (
     <>
       <div
@@ -58,24 +80,38 @@ const IssuesList = ({ data, issuesToDisplay }) => {
         <div>
           <strong>
             Total Closed Issues (showing first {issuesToDisplay}):{" "}
-            {fragmentData.issues.totalCount}
+            {data.issues.totalCount}
           </strong>
-        </div>
-        {fragmentData.issues.edges.map((data) => (
-          <div
-            key={data.cursor}
-            style={{
-              border: "1px solid black",
-              marginTop: "5px",
-              padding: "5px",
-            }}
+          <button
+            name="load more issues"
+            type="button"
+            className="issues-load-more"
+            onClick={loadMore}
           >
-            <IssueRow data={data} />
-          </div>
-        ))}
+            Load More
+          </button>
+        </div>
+        {data.issues.edges.map((data) => {
+          console.log("Issue data in map");
+          console.log(data);
+          return (
+            <div
+              key={data.cursor}
+              style={{
+                border: "1px solid black",
+                marginTop: "5px",
+                padding: "5px",
+              }}
+            >
+              <div>Issue ID : {data.__id}</div>
+              <div>Cursor : {data.cursor}</div>
+              <IssueRow parentData={data.node} />
+            </div>
+          );
+        })}
       </div>
       <DisplayRawdata
-        data={fragmentData}
+        data={data}
         contentDescription="raw result of useFragment() in issueslist"
       />
     </>
@@ -92,24 +128,25 @@ const IssuesList = ({ data, issuesToDisplay }) => {
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment
  * @returns The resulted React component content
  */
-const IssueRow = ({ data }) => {
+const IssueRow = ({ parentData }) => {
   const fragmentData = useFragment(
     graphql`
-      fragment IssuesList_issue on IssueEdge {
-        node {
-          id
-          title
-          createdAt
-        }
+      fragment IssuesListItem_issue on Issue {
+        id
+        title
+        createdAt
       }
     `,
-    data
+    parentData
   );
-
+  console.log("Parent Data:");
+  console.log(parentData);
+  console.log("Issue Row data");
+  console.log(fragmentData);
   return (
     <>
-      <div>Issue title: {fragmentData.node.title}</div>
-      <div>Created at: {fragmentData.node.createdAt}</div>
+      <div>Issue title: {fragmentData.title}</div>
+      <div>Created at: {fragmentData.createdAt}</div>
       <DisplayRawdata
         data={fragmentData}
         contentDescription="raw result of useFragment() in IssueRow"
