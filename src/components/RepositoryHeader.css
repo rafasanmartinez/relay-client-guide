@@ -1,0 +1,28 @@
+.Repository-Header-Frame {
+
+  padding: 0px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.Repository-Header-Frame .Repository-Header-Row {
+  display: flex;
+  flex-flow: row wrap;
+  min-width: 0;
+}
+
+.Repository-Header-Frame .Repository-Header-Row .Repository-Header-Fragment {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-right: 4px;
+}
+
+.Repository-Header-Fragment span {
+  margin-right: 4px;
+}
+
+.Repository-Header-Fragment .label {
+  font-weight: 500;
+}

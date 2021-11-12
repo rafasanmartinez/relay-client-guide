@@ -10,8 +10,7 @@
 }
 
 .App-Body {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding:16px;
 }
 
 .App-header {
@@ -37,3 +36,36 @@
     transform: rotate(360deg);
   }
 }
+
+.App-Form {
+  display: flex;
+  flex-flow: column wrap;
+  margin-bottom:8px;
+}
+
+.App-Form label {
+  margin-right: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items:center;
+}
+
+.App-Form input[type="submit"] {
+  margin-right: 8px;
+}
+
+.App-Form .Form-Line {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.App-Form .Form-Line .Form-Line-Section {
+  display:flex;
+  flex-flow: row wrap;
+  flex-grow:1;
+}
+
+.App-Form .Form-Line .filler {
+  flex-grow:1;
+}
+

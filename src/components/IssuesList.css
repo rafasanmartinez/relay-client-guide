@@ -1,0 +1,49 @@
+.Issues-List-Header {
+  display: flex;
+  flex-flow: row wrap;
+  margin-bottom: 8px;
+}
+
+.Issues-List-Header .fragment {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-right: 4px;
+}
+
+.Issues-List-Header .title {
+  font-weight: 600;
+  font-size:14px;
+}
+
+.Issues-List-Header .filler {
+  flex-grow: 1;
+}
+
+.App-Form .Form-Line {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.Issue-Cell {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.Issue-Cell .title {
+  font-size: 16px;
+  font-weight:600;
+}
+
+.Issue-Cell .secondary {
+    font-size: 12px;
+    font-weight:400;
+  }
+
+.Issues-List-Header .Issues-List-Header-Section {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.App-Form .Form-Line .filler {
+  flex-grow: 1;
+}

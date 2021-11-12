@@ -1,6 +1,8 @@
 import graphql from "babel-plugin-relay/macro";
 import { useFragment } from "react-relay/hooks";
 import DisplayRawdata from "./DisplayRawData";
+import "./RepositoryHeader.css";
+import formatDate from "../helpers/FormatDate"
 /**
  * This component displays general information about a Github Repository given the result of a loaded query, that contains
  * information about how to spread the fragment that contains the data pertained to it.
@@ -28,20 +30,19 @@ const RepositoryHeader = ({ data }) => {
 
   return (
     <RepositoryHeaderFrame>
-      <div>
-        <strong>Repository Header</strong>
-      </div>
-      <div>
-        Owner: <span>{fragmentData.owner.login}</span>{" "}
-      </div>
-      <div>
-        Repository: <span>{fragmentData.name}</span>
-      </div>
-      <div>
-        Name with Owner: <span>{fragmentData.nameWithOwner}</span>
-      </div>
-      <div>
-        Created at: <span>{fragmentData.createdAt}</span>
+      <div className="Repository-Header-Row">
+        <div className="Repository-Header-Fragment">
+          <span className="label">Owner:</span>
+          <span>{fragmentData.owner.login}</span>
+        </div>
+        <div className="Repository-Header-Fragment">
+          <span className="label">Repository:</span>
+          <span>{fragmentData.name}</span>
+        </div>
+        <div className="Repository-Header-Fragment">
+          <span className="label">Created at:</span>
+          <span>{formatDate(fragmentData.createdAt)}</span>
+        </div>
       </div>
       <DisplayRawdata
         data={fragmentData}
@@ -52,13 +53,7 @@ const RepositoryHeader = ({ data }) => {
 };
 
 const RepositoryHeaderFrame = ({ children }) => {
-  return (
-    <div
-      style={{ border: "1px solid black", padding: "10px", marginTop: "10px" }}
-    >
-      {children}
-    </div>
-  );
+  return <div className="Repository-Header-Frame">{children}</div>;
 };
 
 const RepositoryHeaderGlimmer = () => {
