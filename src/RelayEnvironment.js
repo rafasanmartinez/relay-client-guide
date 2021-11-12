@@ -13,5 +13,5 @@ async function fetchRelay(params, variables) {
 // Added the argument `gcReleaseBufferSize: 0`to make evident the use of query retention and disposition in the app
 export default new Environment({
   network: Network.create(fetchRelay),
-  store: new Store(new RecordSource(), { gcReleaseBufferSize: 0 }),
+  store: new Store(new RecordSource()),
 });

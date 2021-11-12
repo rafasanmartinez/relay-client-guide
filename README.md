@@ -4,7 +4,7 @@ The objective of this project is to go over the documentation of Relay and ilust
 
 You can use this project by checking out the different tags that correspond to the respective lessons in the Relay site documentation.
 
-I am purposedly not using [Flow](https://flow.org/) annotations, as they are used in the [Relay Documentation](https://relay.dev/docs/) in order that you can learn the concepts by working with a simpler code. I believe that starting to learn Relay without Flow will make a better introduction to the features for you.
+I am starting to introduce [Flow](https://flow.org/) annotations, as the application gains in complexity, and after having spending some time learning it, it seems like a good tool to get a better grasp to the application. I am not too good yet to use the Relay generated types, but i expect to be using them in the near future.
 
 The code will work well with or without Flow, but I must recognize that when integrated in a bigger team, or when your application gets more complex, using Flow can be worth the effort.
 
@@ -21,24 +21,21 @@ When reviewing or checking out this code, I would assume that you have already g
 - [error-boundaries](https://github.com/rafasanmartinez/relay-client-guide/tree/error-boundaries)
 - [fetch-policies](https://github.com/rafasanmartinez/relay-client-guide/tree/fetch-policies)
 - [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data)
+- [presence-of-data-2](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data-2)
 
 It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
-## Specific to this sample: presence-of-data-2
+## Specific to this sample: pagination
 
-This sample is an evolution of [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data).
+This sample is an evolution of [presence-of-data-2](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data-2).
 
-For this evolution, I have added the parameter `{gcReleaseBufferSize:0}` to the instantiation of the `Store` in the file `RelayEnvironment.js`.
+There are a number of things that have been added to this evolution:
 
-```
-// Export a singleton instance of Relay Environment configured with our network function:
-export default new Environment({
-  network: Network.create(fetchRelay),
-  store: new Store(new RecordSource(),{gcReleaseBufferSize:0}),
-});
-```
+- Pagination: I have added a simple pagination. Initially, it loads the first 10 issues of the repository. WHen the user clicks on the button `Load More`, the application adds to the list 10 more issues, and so on.
+- Raw Data: I have made possible to see or not see the raw data and buttons creating a context for that purpose.
+- Apperance: I have made some appearance improvements just using some css.
+- Retention: I have eliminated the `{gcReleaseBufferSize:0}` tor React to retain queries as it does by default
 
-Additionally, I maintain a list of retained operations in the `App` component state, so you can experiment with query retention feature. You can see the code in `App.js`.
 
 In order to see what is going on with the relay store, you should to install the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl)
 
