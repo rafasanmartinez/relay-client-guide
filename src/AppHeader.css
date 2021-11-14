@@ -1,0 +1,9 @@
+.App-Body {
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.App-Header {
+  border-bottom: 1px solid black;
+  margin-bottom: 16px;
+}

@@ -27,15 +27,10 @@ import AppContext from "./AppContext";
  *   - Obtains a handle to load the Query with useQueryLoader
  *   - The query reference is an instance of the loaded query results after if it has been started to be loaded
  *   - When the user submits the data in the form, the application loads the query and display the data fetched.
- *   - A list of retained queries, that the user can dispose.
+ *   - The list displayed uses pagination, in the sense that initially, it loads the first 10 issues of the repository. WHen the user clicks on the button `Load More`, the application adds to the list 10 more issues, and so on.
  *
  * Important: In order to display a fragment further down in a component, the query includes the name of the fragments with the spread `...`operator like:
  *
- * In this example, the `IssuesList_repository` fragment includes an argument `isuesNumber` that gets populated with the input
- * entered through the variable `$issuesFirst`
- *
- * Additionally, the appplication includes the reference to the argument  the value of the parameter `issuesFirst` through the components hierarchy (see Relay last paragraph of the chapter).
- * The same job could be eventually done implementing a React Context.
  *
  * @returns Content of the application
  */
@@ -75,7 +70,7 @@ function App() {
   };
 
   return (
-    <div className="App-Body">
+    <>
       <form onSubmit={handleSubmit} className="App-Form">
         <div className="Form-Line">
           <div className="Form-Line-Section">
@@ -114,7 +109,7 @@ function App() {
           </Suspense>
         </AppContext.Provider>
       )}
-    </div>
+    </>
   );
 }
 
@@ -164,18 +159,4 @@ const DataDisplay = ({ query, queryReference }) => {
   );
 };
 
-/**
- * Applies Relay Environment and Error Boundary
- * @returns Root element of the application
- */
-function AppRoot(): Node {
-  return (
-    <RelayEnvironmentProvider environment={RelayEnvironment}>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </RelayEnvironmentProvider>
-  );
-}
-
-export default AppRoot;
+export default App;
