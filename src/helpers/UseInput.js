@@ -7,7 +7,7 @@ import { useState } from "react";
  * @param initialValue
  * @returns Control handlers for a form input
  */
-const useInput = (initialValue) => {
+const useInput = (initialValue, setContextFunction) => {
   const [value, setValue] = useState(initialValue);
 
   return {
@@ -17,7 +17,9 @@ const useInput = (initialValue) => {
     bind: {
       value,
       onChange: (event) => {
-        setValue(event.target.value);
+        const newValue = event.target.value;
+        setValue(newValue);
+        if (setContextFunction) setContextFunction(newValue);
       },
     },
   };

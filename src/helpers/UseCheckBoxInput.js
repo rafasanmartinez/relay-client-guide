@@ -1,3 +1,4 @@
+// @flow
 import { useState } from "react";
 
 /**
@@ -6,7 +7,7 @@ import { useState } from "react";
  * @param initialValue
  * @returns Control handlers for a form checkbox input
  */
-const useCheckBoxInput = (initialValue) => {
+const useCheckBoxInput = (initialValue, setContextFunction) => {
   const [checked, setValue] = useState(initialValue);
 
   return {
@@ -16,7 +17,9 @@ const useCheckBoxInput = (initialValue) => {
     bind: {
       checked,
       onChange: (event) => {
-        setValue(event.target.checked);
+        const newValue = event.target.checked;
+        setValue(newValue);
+        if (setContextFunction) setContextFunction(newValue);
       },
     },
   };

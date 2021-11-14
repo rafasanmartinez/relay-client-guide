@@ -66,13 +66,6 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
     refetch,
   } = response;
 
-  /*
-  console.log("Reponse from pagination:")
-  console.log(response);
-  console.log("Issues List Fragment Data:");
-  console.log(data);
-  */
-
   const loadMore = useCallback(() => {
     // Don't fetch again if we're already loading the next page
     if (isLoadingNext) {
@@ -109,10 +102,6 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
           </div>
         </div>
         {data.issues.edges.map((data) => {
-          /*
-          console.log("Issue data in map");
-          console.log(data);
-          */
           return (
             <div
               key={data.cursor}
@@ -161,16 +150,12 @@ const IssueRow = ({ parentData }) => {
     `,
     parentData
   );
-  /*
-  console.log("Parent Data:");
-  console.log(parentData);
-  console.log("Issue Row data");
-  console.log(fragmentData);
-  */
   return (
     <div className="Issue-Cell">
       <div className="title">
-        <Link to={"/" + fragmentData.number}>{fragmentData.title}</Link>
+        <Link to={{ pathname: "/" + fragmentData.number, state: {foo:'bar'} }}>
+          {fragmentData.title}
+        </Link>
         <span className="number"></span>
       </div>
       <div className="secondary">

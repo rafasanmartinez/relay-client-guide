@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Suspense, useContext } from "react";
-import type {Node} from 'react'
+import React, { Suspense, useContext, useState, useEffect } from "react";
+import type { Node } from "react";
 import "./App.css";
 import graphql from "babel-plugin-relay/macro";
 import { useQueryLoader, usePreloadedQuery } from "react-relay/hooks";
@@ -29,14 +29,38 @@ import AppContext from "./AppContext";
  *
  * @returns Content of the application
  */
-function App(): Node {
-  // State controllers for form inputs
-  const { value: owner, bind: bindOwner } = useInput("facebook");
-  const { value: name, bind: bindName } = useInput("relay");
-  const { checked: willDisplayRawData, bind: bindWillDisplayRawData } =
-    useCheckBoxInput(false);
+type Props = any;
 
-  //const AppContext = React.createContext({willDisplayRawData: willDisplayRawData});
+function App(props: Props): Node {
+  const {
+    willDisplayRawData: ctxWillDisplayRawData,
+    setWillDisplayRawData: ctxSetWillDisplayRawData,
+    repositoryOwner: ctxRepositoryOwner,
+    setRepositoryOwner: ctxSetRepositoryOwner,
+    repositoryName: ctxRepositoryName,
+    setRepositoryName: ctxSetRepositoryName,
+    dataLoaded: ctxDataLoaded,
+    setDataLoaded: ctxSetDataloaded,
+  } = useContext(AppContext);
+
+  const [dataLoaded, setDataLoaded] = useState(ctxDataLoaded);
+
+  const { value: owner, bind: bindOwner } = useInput(
+    ctxRepositoryOwner,
+    ctxSetRepositoryOwner
+  );
+  const { value: name, bind: bindName } = useInput(
+    ctxRepositoryName,
+    ctxSetRepositoryName
+  );
+  const { checked: willDisplayRawData, bind: bindWillDisplayRawData } =
+    useCheckBoxInput(ctxWillDisplayRawData, ctxSetWillDisplayRawData);
+
+ 
+  props.match.location.state = {
+    willDisplayRawData: willDisplayRawData,
+    owner: owner,
+  };
 
   // Define the query
   const RepositoryNameQuery = graphql`
@@ -62,7 +86,15 @@ function App(): Node {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     loadQuery(variables);
+    setDataLoaded(true);
+    ctxSetDataloaded(true);
   };
+
+  useEffect(() => {
+    if (dataLoaded && !queryReference) {
+      loadQuery(variables);
+    }
+  });
 
   return (
     <>
@@ -90,7 +122,7 @@ function App(): Node {
       </form>
 
       {queryReference != null && (
-        <AppContext.Provider value={{ willDisplayRawData: willDisplayRawData }}>
+        <>
           <RawData>
             <button onClick={disposeQuery}>
               Click to hide the data and dispose the query.
@@ -102,7 +134,7 @@ function App(): Node {
               queryReference={queryReference}
             />
           </Suspense>
-        </AppContext.Provider>
+        </>
       )}
     </>
   );
@@ -127,8 +159,6 @@ function App(): Node {
 
 const DataDisplay = ({ query, queryReference }) => {
   // Get the data from the prelosded query
-  const { willDisplayRawData } = useContext(AppContext);
-  console.log("Will Display RawData: " + willDisplayRawData.toString());
   const data = usePreloadedQuery(query, queryReference);
 
   if (data.repository == null) {
