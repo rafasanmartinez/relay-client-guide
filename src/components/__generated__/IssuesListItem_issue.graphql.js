@@ -15,6 +15,7 @@ export type IssuesListItem_issue = {|
   +id: string,
   +title: string,
   +createdAt: any,
+  +number: number,
   +$refType: IssuesListItem_issue$ref,
 |};
 export type IssuesListItem_issue$data = IssuesListItem_issue;
@@ -52,12 +53,19 @@ const node/*: ReaderFragment*/ = {
       "kind": "ScalarField",
       "name": "createdAt",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "number",
+      "storageKey": null
     }
   ],
   "type": "Issue",
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = '6557eb3d6a99dbc1b9db1c266b45f74b';
+(node/*: any*/).hash = '81edffd9c81a3cf46c1466eac0752d2d';
 
 module.exports = node;

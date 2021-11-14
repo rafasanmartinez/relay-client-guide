@@ -1,15 +1,10 @@
 // @flow
+
 import React, { Suspense, useContext } from "react";
-import type { Node } from "react";
+import type {Node} from 'react'
 import "./App.css";
 import graphql from "babel-plugin-relay/macro";
-import {
-  RelayEnvironmentProvider,
-  useQueryLoader,
-  usePreloadedQuery,
-} from "react-relay/hooks";
-import RelayEnvironment from "./RelayEnvironment";
-import ErrorBoundary from "./ErrorBoundary";
+import { useQueryLoader, usePreloadedQuery } from "react-relay/hooks";
 import useInput from "./helpers/UseInput";
 import useCheckBoxInput from "./helpers/UseCheckBoxInput";
 import RepositoryHeader, {
@@ -34,7 +29,7 @@ import AppContext from "./AppContext";
  *
  * @returns Content of the application
  */
-function App() {
+function App(): Node {
   // State controllers for form inputs
   const { value: owner, bind: bindOwner } = useInput("facebook");
   const { value: name, bind: bindName } = useInput("relay");

@@ -4,6 +4,7 @@ import DisplayRawdata from "./DisplayRawData";
 import RawData from "./RawData";
 import { useCallback } from "react";
 import "./IssuesList.css";
+import { Link } from "found";
 //import { usePaginationFragment } from "react-relay/hooks";
 
 /**
@@ -91,7 +92,9 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
       >
         <div className="Issues-List-Header">
           <div className="fragment">
-            <span className="title">Total Closed Issues: {data.issues.totalCount}</span>
+            <span className="title">
+              Total Closed Issues: {data.issues.totalCount}
+            </span>
           </div>
           <div className="filler" />
           <div className="fragment">
@@ -153,6 +156,7 @@ const IssueRow = ({ parentData }) => {
         id
         title
         createdAt
+        number
       }
     `,
     parentData
@@ -165,8 +169,13 @@ const IssueRow = ({ parentData }) => {
   */
   return (
     <div className="Issue-Cell">
-      <div className="title">{fragmentData.title}</div>
-      <div className="secondary">Created at: {fragmentData.createdAt}</div>
+      <div className="title">
+        <Link to={"/" + fragmentData.number}>{fragmentData.title}</Link>
+        <span className="number"></span>
+      </div>
+      <div className="secondary">
+        {"#" + fragmentData.number + " "}created at: {fragmentData.createdAt}
+      </div>
       <DisplayRawdata
         data={fragmentData}
         contentDescription="raw result of useFragment() in IssueRow"

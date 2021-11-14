@@ -5,12 +5,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import AppHeader from "./AppHeader";
+import Issue from "./components/Issue";
 import reportWebVitals from "./reportWebVitals";
-import {
-  RelayEnvironmentProvider,
-  useQueryLoader,
-  usePreloadedQuery,
-} from "react-relay/hooks";
+import { RelayEnvironmentProvider } from "react-relay/hooks";
 import { makeRouteConfig, Route, createBrowserRouter } from "found";
 import RelayEnvironment from "./RelayEnvironment";
 import ErrorBoundary from "./ErrorBoundary";
@@ -18,6 +15,7 @@ import ErrorBoundary from "./ErrorBoundary";
 const routeConfig = makeRouteConfig(
   <Route path="/" Component={AppHeader}>
     <Route Component={App} />
+    <Route path="/:number" Component={Issue} />
   </Route>
 );
 

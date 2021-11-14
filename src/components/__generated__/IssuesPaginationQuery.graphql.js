@@ -43,6 +43,7 @@ fragment IssuesListItem_issue on Issue {
   id
   title
   createdAt
+  number
 }
 
 fragment IssuesList_repository_1G22uz on Repository {
@@ -227,6 +228,13 @@ return {
                             "name": "createdAt",
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "number",
+                            "storageKey": null
+                          },
                           (v2/*: any*/)
                         ],
                         "storageKey": null
@@ -324,12 +332,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "93838063de712d4b54d3f8e3243aabb9",
+    "cacheID": "56e15f9ae98ea889d1a6aa447efc4a3d",
     "id": null,
     "metadata": {},
     "name": "IssuesPaginationQuery",
     "operationKind": "query",
-    "text": "query IssuesPaginationQuery(\n  $count: Int = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...IssuesList_repository_1G22uz\n    id\n  }\n}\n\nfragment IssuesListItem_issue on Issue {\n  id\n  title\n  createdAt\n}\n\nfragment IssuesList_repository_1G22uz on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, after: $cursor, first: $count) {\n    edges {\n      node {\n        ...IssuesListItem_issue\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n  id\n}\n"
+    "text": "query IssuesPaginationQuery(\n  $count: Int = 10\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...IssuesList_repository_1G22uz\n    id\n  }\n}\n\nfragment IssuesListItem_issue on Issue {\n  id\n  title\n  createdAt\n  number\n}\n\nfragment IssuesList_repository_1G22uz on Repository {\n  issues(orderBy: {field: CREATED_AT, direction: ASC}, states: CLOSED, after: $cursor, first: $count) {\n    edges {\n      node {\n        ...IssuesListItem_issue\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n      hasPreviousPage\n    }\n    totalCount\n  }\n  id\n}\n"
   }
 };
 })();
