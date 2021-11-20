@@ -1,5 +1,6 @@
 // @ flow
 
+import "./RawData.css"
 import React, { useContext } from "react";
 import type { Node } from "react";
 import AppContext from "../AppContext";
@@ -15,7 +16,7 @@ type Props = {
 const RawData = ({ children }: Props): Node => {
   const { willDisplayRawData } = useContext(AppContext);
   if (!willDisplayRawData) return null;
-  else return <div>{children}</div>;
+  else return <div className="Raw-Data">{children}</div>;
 };
 
 export default RawData;

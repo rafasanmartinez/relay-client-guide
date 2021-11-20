@@ -15,8 +15,8 @@ const AppHeader = (props: Props): Node => {
   const [repositoryName, setRepositoryName] = useState("relay");
   const [dataLoaded, setDataLoaded] = useState(false);
   return (
-    <div className="App-Body">
-      <div className="App-Header">
+    <div className="App-Header-Body">
+      <div className="App-Header-Container">
         <h1>Github Issues Manager</h1>
       </div>
       <AppContext.Provider

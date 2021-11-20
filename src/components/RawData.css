@@ -1,0 +1,10 @@
+.Raw-Data {
+    display:flex;
+    flex-flow:column wrap;
+}
+
+.Raw-Data div {
+    font-size:13px;
+    font-family: 'Courier New', Courier, monospace;
+    color: rgb(11, 121, 184);
+}

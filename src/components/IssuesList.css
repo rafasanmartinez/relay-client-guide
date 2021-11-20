@@ -12,7 +12,7 @@
 
 .Issues-List-Header .title {
   font-weight: 600;
-  font-size:14px;
+  font-size: 14px;
 }
 
 .Issues-List-Header .filler {
@@ -24,24 +24,39 @@
   flex-flow: row wrap;
 }
 
+.Issue-Cell-Container {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  border: 1px solid black;
+  border-radius: 8px;
+  margin-top: 8px;
+  padding: 8px;
+}
+
 .Issue-Cell {
   display: flex;
   flex-flow: column wrap;
+  align-self:flex-start;
 }
 
 .Issue-Cell .title {
   font-size: 16px;
-  font-weight:600;
+  font-weight: 600;
 }
 
 .Issue-Cell .secondary {
-    font-size: 12px;
-    font-weight:400;
-  }
+  font-size: 12px;
+  font-weight: 400;
+}
 
 .Issues-List-Header .Issues-List-Header-Section {
   display: flex;
   flex-flow: row wrap;
+}
+
+.Issue-Comment .author {
+  margin-bottom: "8px";
 }
 
 .App-Form .Form-Line .filler {

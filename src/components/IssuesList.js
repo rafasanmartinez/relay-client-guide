@@ -1,10 +1,12 @@
+import "./IssuesList.css";
+import React, { useContext } from "react";
 import { useFragment, usePaginationFragment } from "react-relay";
 import graphql from "babel-plugin-relay/macro";
 import DisplayRawdata from "./DisplayRawData";
 import RawData from "./RawData";
 import { useCallback } from "react";
-import "./IssuesList.css";
 import { Link } from "found";
+import AppContext from "../AppContext";
 //import { usePaginationFragment } from "react-relay/hooks";
 
 /**
@@ -77,11 +79,6 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
   return (
     <>
       <div
-        style={{
-          border: "1px solid black",
-          padding: "10px",
-          marginTop: "10px",
-        }}
       >
         <div className="Issues-List-Header">
           <div className="fragment">
@@ -105,11 +102,7 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
           return (
             <div
               key={data.cursor}
-              style={{
-                border: "1px solid black",
-                marginTop: "5px",
-                padding: "5px",
-              }}
+              className="Issue-Cell-Container"
             >
               <RawData>
                 <div>Issue ID : {data.__id}</div>
@@ -133,12 +126,17 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
  * of the type [IssueEdge](https://docs.github.com/en/graphql/reference/objects#issueedge).
  *
  * The component calls fo useFragment with the graphql compiled literal that describes the fragment, and the piece of the data into the query that contains the
- * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`
+ * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`.
+ * 
+ * Additionally, the user can click on the name of an issue, and it will take him/her to the Issue page. You do that usinf the `Link` component. This component redurects the application
+ * to the path `pathname: "/" + fragmentData.id` where `fragmentData.id` turns to get populated with the Issue id. It also establishes the state of the path `Location` with the values of the
+ * name and owner of the repository, that are obtained from the application context. You have to do this when you have to query for data whose parameters you do not want to pass through the path 
  *
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment
  * @returns The resulted React component content
  */
 const IssueRow = ({ parentData }) => {
+  const { repositoryOwner, repositoryName } = useContext(AppContext);
   const fragmentData = useFragment(
     graphql`
       fragment IssuesListItem_issue on Issue {
@@ -153,7 +151,15 @@ const IssueRow = ({ parentData }) => {
   return (
     <div className="Issue-Cell">
       <div className="title">
-        <Link to={{ pathname: "/" + fragmentData.number, state: {foo:'bar'} }}>
+        <Link
+          to={{
+            pathname: "/" + fragmentData.id,
+            state: {
+              repositoryOwner: repositoryOwner,
+              repositoryName: repositoryName,
+            },
+          }}
+        >
           {fragmentData.title}
         </Link>
         <span className="number"></span>

@@ -1,4 +1,5 @@
 // @flow
+import './DisplayRawData.css';
 import React, { useState } from "react";
 import type { Node } from "react";
 import RawData from "./RawData";
@@ -26,7 +27,7 @@ const DisplayRawdata = ({ data, contentDescription }: Props): Node => {
 
   return (
     <RawData>
-      <div style={{ marginTop: "10px" }}>
+      <div className="DisplayRawdata-Button-Wrapper">
         <button onClick={() => setState(!state)}>{buttonText}</button>
       </div>
       {state ? (

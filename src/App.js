@@ -1,8 +1,8 @@
 // @flow
 
+import "./App.css";
 import React, { Suspense, useContext, useState, useEffect } from "react";
 import type { Node } from "react";
-import "./App.css";
 import graphql from "babel-plugin-relay/macro";
 import { useQueryLoader, usePreloadedQuery } from "react-relay/hooks";
 import useInput from "./helpers/UseInput";
@@ -56,7 +56,6 @@ function App(props: Props): Node {
   const { checked: willDisplayRawData, bind: bindWillDisplayRawData } =
     useCheckBoxInput(ctxWillDisplayRawData, ctxSetWillDisplayRawData);
 
- 
   props.match.location.state = {
     willDisplayRawData: willDisplayRawData,
     owner: owner,
@@ -97,46 +96,50 @@ function App(props: Props): Node {
   });
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="App-Form">
-        <div className="Form-Line">
-          <div className="Form-Line-Section">
-            <label>
-              Repository Owner:
-              <input type="text" style={{ marginLeft: "5px" }} {...bindOwner} />
-            </label>
-            <label>
-              Repository Name:
-              <input type="text" style={{ marginLeft: "5px" }} {...bindName} />
-            </label>
-            <input type="submit" value="Submit" />
+    <div className="App-Container">
+      <div className="App-Body">
+        <form onSubmit={handleSubmit} className="App-Form">
+          <div className="Form-Line">
+            <div className="Form-Line-Section">
+              <label>
+                Repository Owner:
+                <input type="text" {...bindOwner} />
+              </label>
+              <label>
+                Repository Name:
+                <input type="text" {...bindName} />
+              </label>
+              <input type="submit" value="Submit" />
+            </div>
+            <div className="Form-Line-Section">
+              <div className="filler" />
+              <label>
+                Display Raw Data:
+                <input type="checkbox" {...bindWillDisplayRawData} />
+              </label>
+            </div>
           </div>
-          <div className="Form-Line-Section">
-            <div className="filler" />
-            <label>
-              Display Raw Data:
-              <input type="checkbox" {...bindWillDisplayRawData} />
-            </label>
-          </div>
-        </div>
-      </form>
+        </form>
 
-      {queryReference != null && (
-        <>
-          <RawData>
-            <button onClick={disposeQuery}>
-              Click to hide the data and dispose the query.
-            </button>
-          </RawData>
-          <Suspense fallback={<div>'Loading repository data...'</div>}>
-            <DataDisplay
-              query={RepositoryNameQuery}
-              queryReference={queryReference}
-            />
-          </Suspense>
-        </>
-      )}
-    </>
+        {queryReference != null && (
+          <>
+            <RawData>
+              <div>
+                <button onClick={disposeQuery}>
+                  Click to hide the data and dispose the query.
+                </button>
+              </div>
+            </RawData>
+            <Suspense fallback={<div>'Loading repository data...'</div>}>
+              <DataDisplay
+                query={RepositoryNameQuery}
+                queryReference={queryReference}
+              />
+            </Suspense>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -1,12 +1,18 @@
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App-Container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App-Body {
+  display: flex;
+  flex-flow: column wrap;
+  width: 1248px;
+  max-width: 1248px;
+  padding-left: 32;
+  padding-right: 32;
+  align-self: center;
 }
 
 .App-header {
@@ -20,30 +26,17 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .App-Form {
   display: flex;
   flex-flow: column wrap;
-  margin-bottom:8px;
+  margin-bottom: 8px;
 }
 
 .App-Form label {
   margin-right: 8px;
   display: flex;
   flex-flow: row nowrap;
-  align-items:center;
+  align-items: center;
 }
 
 .App-Form input[type="submit"] {
@@ -56,12 +49,15 @@
 }
 
 .App-Form .Form-Line .Form-Line-Section {
-  display:flex;
+  display: flex;
   flex-flow: row wrap;
-  flex-grow:1;
+  flex-grow: 1;
+}
+
+.App-Form .Form-Line .Form-Line-Section input {
+  margin-left:5px;
 }
 
 .App-Form .Form-Line .filler {
-  flex-grow:1;
+  flex-grow: 1;
 }
-

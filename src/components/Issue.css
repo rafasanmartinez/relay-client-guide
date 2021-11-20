@@ -1,0 +1,48 @@
+.Issue-Container {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  flex-direction: row;
+}
+
+.Issue-Body {
+  display: flex;
+  flex-flow: column wrap;
+  flex-shrink: 1;
+  width: 1248px;
+  max-width: 1248px;
+  padding-left:32;
+  padding-right:32;
+  align-self: center;
+}
+
+.Issue-Body .title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.Issue-Body .number {
+  font-weight: 400;
+}
+
+.Issue-Body .secondary {
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.Issue-Comment {
+  display:flex;
+  flex-flow: column wrap;
+  flex-shrink: 1;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid gray;
+  padding:16px;
+  border-radius: 8px;
+  margin-top:8px;
+}
+
+.Issue-Comment .author {
+  margin-bottom:8px;
+}
