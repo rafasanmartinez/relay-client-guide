@@ -33,6 +33,7 @@ export type IssueComments_issue = {|
     |},
     +totalCount: number,
   |},
+  +id: string,
   +$refType: IssueComments_issue$ref,
 |};
 export type IssueComments_issue$data = IssueComments_issue;
@@ -44,20 +45,54 @@ export type IssueComments_issue$key = {
 */
 
 
-const node/*: ReaderFragment*/ = {
-  "argumentDefinitions": [],
+const node/*: ReaderFragment*/ = (function(){
+var v0 = [
+  "comments"
+];
+return {
+  "argumentDefinitions": [
+    {
+      "defaultValue": 10,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./IssueCommentsPaginationQuery.graphql'),
+      "identifierField": "id"
+    }
+  },
   "name": "IssueComments_issue",
   "selections": [
     {
-      "alias": null,
+      "alias": "comments",
       "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 10
-        },
         {
           "kind": "Literal",
           "name": "orderBy",
@@ -69,7 +104,7 @@ const node/*: ReaderFragment*/ = {
       ],
       "concreteType": "IssueCommentConnection",
       "kind": "LinkedField",
-      "name": "comments",
+      "name": "__Comments_comments_connection",
       "plural": false,
       "selections": [
         {
@@ -140,6 +175,13 @@ const node/*: ReaderFragment*/ = {
                   "kind": "ScalarField",
                   "name": "bodyHTML",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -194,13 +236,21 @@ const node/*: ReaderFragment*/ = {
           "storageKey": null
         }
       ],
-      "storageKey": "comments(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"UPDATED_AT\"})"
+      "storageKey": "__Comments_comments_connection(orderBy:{\"direction\":\"ASC\",\"field\":\"UPDATED_AT\"})"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     }
   ],
   "type": "Issue",
   "abstractKey": null
 };
+})();
 // prettier-ignore
-(node/*: any*/).hash = '55df25f90c3d647c7c50ceebf5a9dff2';
+(node/*: any*/).hash = 'cb619ce5c776e0a3bfccf872b5c57b6f';
 
 module.exports = node;

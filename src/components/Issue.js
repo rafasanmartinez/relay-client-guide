@@ -1,10 +1,14 @@
 // @flow
 
 import "./Issue.css";
-import React, { Suspense } from "react";
+import React, { Suspense, useCallback } from "react";
 import type { Node } from "react";
 import graphql from "babel-plugin-relay/macro";
-import { usePreloadedQuery, useFragment, loadQuery } from "react-relay";
+import {
+  usePreloadedQuery,
+  loadQuery,
+  usePaginationFragment,
+} from "react-relay";
 import RelayEnvironment from "../RelayEnvironment";
 
 import IssueQuery from "./__generated__/IssueQuery.graphql";
@@ -57,12 +61,17 @@ graphql`
  * This is a fragment that will unfold the comments in this page
  */
 const CommentsFragment = graphql`
-  fragment IssueComments_issue on Issue {
+  fragment IssueComments_issue on Issue
+  @argumentDefinitions(
+    cursor: { type: "String" }
+    count: { type: "Int", defaultValue: 10 }
+  )
+  @refetchable(queryName: "IssueCommentsPaginationQuery") {
     comments(
-      first: 10
+      first: $count
       orderBy: { field: UPDATED_AT, direction: ASC }
-      after: null
-    ) {
+      after: $cursor
+    ) @connection(key: "Comments_comments") {
       edges {
         cursor
         node {
@@ -192,26 +201,56 @@ const IssueCommentDisplay = ({ author, date, body }): Node => {
  * to check for `undefiled` and null values tough all the component.
  */
 const CommentsList = ({ parentData }) => {
-  const response = useFragment(CommentsFragment, parentData);
+  const response = usePaginationFragment(CommentsFragment, parentData);
+  console.log(response);
+  const {
+    data: fragmentData,
+    hasNext,
+    hasPrevious,
+    isLoadingNext,
+    isLoadingPrevious,
+    loadNext,
+    loadPrevious,
+    refetch,
+  } = response;
 
+  const loadMore = useCallback(() => {
+    // Don't fetch again if we're already loading the next page
+    if (isLoadingNext) {
+      return;
+    }
+    loadNext(10);
+  }, [isLoadingNext, loadNext]);
   if (!response) return <div>{"No comments were retrieved"}</div>;
 
-  const data: IssueComments_issue$data = response;
+  const data: IssueComments_issue$data = fragmentData;
 
   const edges = data.comments.edges;
   if (!edges) return <div>{"No comments were retrieved"}</div>;
 
   return (
     <>
+      <div className="Issues-Comment-Header">
+        <button
+          name="load more issues"
+          type="button"
+          className="comments-load-more"
+          disabled={!hasNext ? "disabled" : ""}
+          onClick={loadMore}
+        >
+          Load More
+        </button>
+        <div className="filler" />
+      </div>
       {edges.map((data) => {
         if (!data) return <div>{"Comment is invalid"}</div>;
         return (
-          <>
+          <div key={data.cursor}>
             <IssueComment data={data.node} />
             <RawData>
               <div>Cursor : {stringer(JSON.stringify(data.node))}</div>
             </RawData>
-          </>
+          </div>
         );
       })}
       <DisplayRawData

@@ -19,12 +19,16 @@ When reviewing or checking out this code, I would assume that you have already g
 - [presence-of-data](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data)
 - [presence-of-data-2](https://github.com/rafasanmartinez/relay-client-guide/tree/presence-of-data-2)
 - [pagination](https://github.com/rafasanmartinez/relay-client-guide/tree/pagination)
+- [routing](https://github.com/rafasanmartinez/relay-client-guide/tree/routing)
+
 
 It will be interesting for you to inspect the internals of the `Store` by installing the [Relay Developer Tools](https://chrome.google.com/webstore/detail/relay-developer-tools/ncedobpgnmkhcmnnkcimnobpfepidadl) extension to follow these samples.
 
-## Specific to this sample: routing
+## Specific to this sample: routing-2
 
-This sample is a significant evolution of [pagination](https://github.com/rafasanmartinez/relay-client-guide/tree/pagination).
+This sample is an slight evolution of [routing](https://github.com/rafasanmartinez/relay-client-guide/tree/routing), with the only difference that I have added pagination to the list of issue comments. 
+
+The sample [routing](https://github.com/rafasanmartinez/relay-client-guide/tree/routing) is a significant evolution of [pagination](https://github.com/rafasanmartinez/relay-client-guide/tree/pagination).
 
 This evolution is now able to display an individual Issue by clicking on the name of one in the Issues Lists, so it takes you to another page where you can see the issue and with its comments.
 

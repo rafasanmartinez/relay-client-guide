@@ -1,10 +1,9 @@
 import "./IssuesList.css";
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { useFragment, usePaginationFragment } from "react-relay";
 import graphql from "babel-plugin-relay/macro";
 import DisplayRawdata from "./DisplayRawData";
 import RawData from "./RawData";
-import { useCallback } from "react";
 import { Link } from "found";
 import AppContext from "../AppContext";
 //import { usePaginationFragment } from "react-relay/hooks";
@@ -92,6 +91,7 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
               name="load more issues"
               type="button"
               className="issues-load-more"
+              disabled={!hasNext ? "disabled" : ""}
               onClick={loadMore}
             >
               Load More

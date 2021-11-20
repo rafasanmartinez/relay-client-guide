@@ -1,7 +1,7 @@
 .Issue-Container {
   display: flex;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
   flex-direction: row;
 }
 
@@ -11,8 +11,8 @@
   flex-shrink: 1;
   width: 1248px;
   max-width: 1248px;
-  padding-left:32;
-  padding-right:32;
+  padding-left: 32;
+  padding-right: 32;
   align-self: center;
 }
 
@@ -32,17 +32,27 @@
 }
 
 .Issue-Comment {
-  display:flex;
+  display: flex;
   flex-flow: column wrap;
   flex-shrink: 1;
   font-size: 14px;
   font-weight: 400;
   border: 1px solid gray;
-  padding:16px;
+  padding: 16px;
   border-radius: 8px;
-  margin-top:8px;
+  margin-top: 8px;
 }
 
 .Issue-Comment .author {
-  margin-bottom:8px;
+  margin-bottom: 8px;
+}
+
+.Issues-Comment-Header {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 8px;
+}
+
+.Issues-Comment-Header .filler {
+  flex-grow: 1;
 }

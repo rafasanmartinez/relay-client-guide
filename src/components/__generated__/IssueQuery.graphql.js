@@ -93,6 +93,7 @@ fragment IssueComments_issue on Issue {
         body
         bodyHTML
         id
+        __typename
       }
     }
     pageInfo {
@@ -103,6 +104,7 @@ fragment IssueComments_issue on Issue {
     }
     totalCount
   }
+  id
 }
 */
 
@@ -211,7 +213,22 @@ v14 = {
   "name": "__typename",
   "storageKey": null
 },
-v15 = {
+v15 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 10
+  },
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": {
+      "direction": "ASC",
+      "field": "UPDATED_AT"
+    }
+  }
+],
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": null,
@@ -344,21 +361,7 @@ return {
               (v5/*: any*/),
               {
                 "alias": null,
-                "args": [
-                  {
-                    "kind": "Literal",
-                    "name": "first",
-                    "value": 10
-                  },
-                  {
-                    "kind": "Literal",
-                    "name": "orderBy",
-                    "value": {
-                      "direction": "ASC",
-                      "field": "UPDATED_AT"
-                    }
-                  }
-                ],
+                "args": (v15/*: any*/),
                 "concreteType": "IssueCommentConnection",
                 "kind": "LinkedField",
                 "name": "comments",
@@ -387,7 +390,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v15/*: any*/),
+                          (v16/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -398,7 +401,8 @@ return {
                           (v12/*: any*/),
                           (v10/*: any*/),
                           (v11/*: any*/),
-                          (v9/*: any*/)
+                          (v9/*: any*/),
+                          (v14/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -454,10 +458,21 @@ return {
                 ],
                 "storageKey": "comments(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"UPDATED_AT\"})"
               },
+              {
+                "alias": null,
+                "args": (v15/*: any*/),
+                "filters": [
+                  "orderBy"
+                ],
+                "handle": "connection",
+                "key": "Comments_comments",
+                "kind": "LinkedHandle",
+                "name": "comments"
+              },
               (v10/*: any*/),
               (v11/*: any*/),
               (v12/*: any*/),
-              (v15/*: any*/)
+              (v16/*: any*/)
             ],
             "type": "Issue",
             "abstractKey": null
@@ -468,12 +483,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c932d104d811ff98b4c3ed9c77aecf2d",
+    "cacheID": "cfb9756cde297251a244ecf50e8ea3a2",
     "id": null,
     "metadata": {},
     "name": "IssueQuery",
     "operationKind": "query",
-    "text": "query IssueQuery(\n  $owner: String!\n  $name: String!\n  $issueId: ID!\n) {\n  repository(owner: $owner, name: $name) {\n    nameWithOwner\n    createdAt\n    id\n  }\n  issue: node(id: $issueId) {\n    __typename\n    ... on Issue {\n      title\n      number\n      id\n      createdAt\n      ...IssueComments_issue\n      body\n      bodyHTML\n      bodyText\n      author {\n        __typename\n        login\n        ... on Node {\n          __isNode: __typename\n          id\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment IssueComments_issue on Issue {\n  comments(first: 10, orderBy: {field: UPDATED_AT, direction: ASC}) {\n    edges {\n      cursor\n      node {\n        author {\n          __typename\n          login\n          ... on Node {\n            __isNode: __typename\n            id\n          }\n        }\n        publishedAt\n        bodyText\n        body\n        bodyHTML\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    totalCount\n  }\n}\n"
+    "text": "query IssueQuery(\n  $owner: String!\n  $name: String!\n  $issueId: ID!\n) {\n  repository(owner: $owner, name: $name) {\n    nameWithOwner\n    createdAt\n    id\n  }\n  issue: node(id: $issueId) {\n    __typename\n    ... on Issue {\n      title\n      number\n      id\n      createdAt\n      ...IssueComments_issue\n      body\n      bodyHTML\n      bodyText\n      author {\n        __typename\n        login\n        ... on Node {\n          __isNode: __typename\n          id\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment IssueComments_issue on Issue {\n  comments(first: 10, orderBy: {field: UPDATED_AT, direction: ASC}) {\n    edges {\n      cursor\n      node {\n        author {\n          __typename\n          login\n          ... on Node {\n            __isNode: __typename\n            id\n          }\n        }\n        publishedAt\n        bodyText\n        body\n        bodyHTML\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    totalCount\n  }\n  id\n}\n"
   }
 };
 })();
