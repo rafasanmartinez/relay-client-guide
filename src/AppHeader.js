@@ -11,8 +11,8 @@ type Props = {
 
 const AppHeader = (props: Props): Node => {
   const [willDisplayRawData, setWillDisplayRawData] = useState(false);
-  const [repositoryOwner, setRepositoryOwner] = useState("facebook");
-  const [repositoryName, setRepositoryName] = useState("relay");
+  const [repositoryOwner, setRepositoryOwner] = useState("rafasanmartinez");
+  const [repositoryName, setRepositoryName] = useState("csif-personal-server");
   const [dataLoaded, setDataLoaded] = useState(false);
   return (
     <div className="App-Header-Body">

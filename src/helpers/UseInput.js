@@ -22,7 +22,7 @@ type Output = {|
   bind: BindOutput,
 |};
 
-const useInput = (initialValue :string, setContextFunction: (...args: Array<any>) => any) : Output=> {
+const useInput = (initialValue :string, setContextFunction?: (...args: Array<any>) => any) : Output=> {
   const [value, setValue] = useState(initialValue);
 
   return {

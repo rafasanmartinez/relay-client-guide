@@ -454,6 +454,18 @@ return {
                     "kind": "ScalarField",
                     "name": "totalCount",
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   }
                 ],
                 "storageKey": "comments(first:10,orderBy:{\"direction\":\"ASC\",\"field\":\"UPDATED_AT\"})"

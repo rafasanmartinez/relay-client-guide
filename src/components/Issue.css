@@ -56,3 +56,34 @@
 .Issues-Comment-Header .filler {
   flex-grow: 1;
 }
+
+.Comment-Form {
+  display:flex;
+  flex-flow: column wrap;
+}
+
+.Comment-Form .form-line {
+  display:flex;
+  flex-flow: row wrap;
+  margin-bottom:8px;
+}
+
+.Comment-Form textarea {
+  flex-grow:1;
+  font: inherit;
+  padding:16px;
+  font-size:14px;
+  height: 96px;
+  font-weight: 400;
+  border: 1px solid gray;
+  border-radius: 8px;
+}
+
+.Comment-Form input[type="submit"] {
+  flex-grow:0;
+}
+
+.Comment-Form-Container {
+  margin-bottom: 16px;
+  margin-top: 16px;
+}

@@ -13,6 +13,7 @@ declare export opaque type IssueComments_issue$ref: FragmentReference;
 declare export opaque type IssueComments_issue$fragmentType: IssueComments_issue$ref;
 export type IssueComments_issue = {|
   +comments: {|
+    +__id: string,
     +edges: ?$ReadOnlyArray<?{|
       +cursor: string,
       +node: ?{|
@@ -234,6 +235,18 @@ return {
           "kind": "ScalarField",
           "name": "totalCount",
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": "__Comments_comments_connection(orderBy:{\"direction\":\"ASC\",\"field\":\"UPDATED_AT\"})"
@@ -251,6 +264,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'cb619ce5c776e0a3bfccf872b5c57b6f';
+(node/*: any*/).hash = '214342626e9aa33f90f8ef724773d577';
 
 module.exports = node;

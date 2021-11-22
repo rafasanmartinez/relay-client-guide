@@ -8,6 +8,7 @@ import {
   usePreloadedQuery,
   loadQuery,
   usePaginationFragment,
+  useMutation,
 } from "react-relay";
 import RelayEnvironment from "../RelayEnvironment";
 
@@ -20,12 +21,16 @@ import type {
 //import CommentsFragment from "./__generated__/IssueComments_issue.graphql";
 import type { IssueComments_issue$data } from "./__generated__/IssueComments_issue.graphql";
 
+import AddCommentMutation from "./__generated__/IssueAddCommentMutation.graphql";
+import type { IssueAddCommentMutationVariables } from "./__generated__/IssueAddCommentMutation.graphql";
+
 import DisplayRawData from "./DisplayRawData";
 import RawData from "./RawData";
 
 import formatDate from "../helpers/FormatDate";
 import stringer from "../helpers/Stringer";
 import coalesce from "../helpers/Coalesce";
+import useInput from "../helpers/UseInput";
 
 /**
  * This is the main query for the component. It queries for both the current issue node and for some field values of the repository
@@ -72,6 +77,7 @@ const CommentsFragment = graphql`
       orderBy: { field: UPDATED_AT, direction: ASC }
       after: $cursor
     ) @connection(key: "Comments_comments") {
+      __id
       edges {
         cursor
         node {
@@ -91,6 +97,30 @@ const CommentsFragment = graphql`
         startCursor
       }
       totalCount
+    }
+  }
+`;
+
+graphql`
+  mutation IssueAddCommentMutation(
+    $input: AddCommentInput!
+    $connections: [ID!]!
+  ) {
+    addComment(input: $input) {
+      commentEdge @appendEdge(connections: $connections) {
+        cursor
+        node {
+          author {
+            login
+          }
+          publishedAt
+          id
+          body
+        }
+      }
+      subject {
+        id
+      }
     }
   }
 `;
@@ -137,6 +167,9 @@ const IssueRoot = (props: any): Node => (
  */
 const Issue = (props: any): Node => {
   const data: IssueQueryResponse = usePreloadedQuery(IssueQuery, props.data);
+  const issueId = data.issue?.id;
+  if (!issueId) return null;
+
   return (
     <div className="Issue-Container">
       <div className="Issue-Body">
@@ -151,7 +184,7 @@ const Issue = (props: any): Node => {
             formatDate(stringer(data.repository?.createdAt))}
         </div>
         <IssueCommentFromAuthor data={data.issue} />
-        <CommentsList parentData={data.issue} />
+        <CommentsList parentData={data} issueId={issueId} />
         <DisplayRawData
           data={data}
           contentDescription="raw result of usePreloadedQuery() in Issue"
@@ -200,19 +233,42 @@ const IssueCommentDisplay = ({ author, date, body }): Node => {
  * CommentsList unwraps the `Issuecomments_issue` fragment. As it can be seen, I am checking on the type of the response by using the Relay generated types, and it forces me
  * to check for `undefiled` and null values tough all the component.
  */
-const CommentsList = ({ parentData }) => {
-  const response = usePaginationFragment(CommentsFragment, parentData);
+
+type Props = {
+  parentData: IssueQueryResponse,
+  issueId: string,
+};
+
+const CommentsList = (props: Props) => {
+  const { value: comment, bind: bindComment } = useInput("");
+  const response = usePaginationFragment(
+    CommentsFragment,
+    props.parentData.issue
+  );
+
+  const { data: fragmentData, hasNext, isLoadingNext, loadNext } = response;
+
+  const connectionId = fragmentData?.comments?.__id;
+  console.log("Connection Id");
+  console.log(connectionId);
+
+  console.log("Comments:");
   console.log(response);
-  const {
-    data: fragmentData,
-    hasNext,
-    hasPrevious,
-    isLoadingNext,
-    isLoadingPrevious,
-    loadNext,
-    loadPrevious,
-    refetch,
-  } = response;
+  const [commit, isInFlight] = useMutation(AddCommentMutation);
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const variables: IssueAddCommentMutationVariables = {
+      input: {
+        body: comment,
+        subjectId: props.issueId,
+      },
+      connections: [connectionId],
+    };
+    commit({
+      variables: variables,
+    });
+  };
 
   const loadMore = useCallback(() => {
     // Don't fetch again if we're already loading the next page
@@ -221,11 +277,11 @@ const CommentsList = ({ parentData }) => {
     }
     loadNext(10);
   }, [isLoadingNext, loadNext]);
-  if (!response) return <div>{"No comments were retrieved"}</div>;
 
+  if (!fragmentData) return null;
   const data: IssueComments_issue$data = fragmentData;
-
   const edges = data.comments.edges;
+
   if (!edges) return <div>{"No comments were retrieved"}</div>;
 
   return (
@@ -238,7 +294,7 @@ const CommentsList = ({ parentData }) => {
           disabled={!hasNext ? "disabled" : ""}
           onClick={loadMore}
         >
-          Load More
+          {!isLoadingNext ? "Load More" : "Loading next 10..."}
         </button>
         <div className="filler" />
       </div>
@@ -253,6 +309,22 @@ const CommentsList = ({ parentData }) => {
           </div>
         );
       })}
+      <div className="Comment-Form-Container">
+        <form onSubmit={handleSubmit} className="Comment-Form">
+          <div className="form-line">
+            <div>Leave a Comment</div>
+          </div>
+          <div className="form-line">
+            <textarea {...bindComment} />
+          </div>
+          <div className="form-line">
+            <input
+              type="submit"
+              value={isInFlight ? "Updating..." : "Submit"}
+            />
+          </div>
+        </form>
+      </div>
       <DisplayRawData
         data={response}
         contentDescription="raw result of useFragment() in Issue"

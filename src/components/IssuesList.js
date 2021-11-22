@@ -56,16 +56,7 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
     `,
     parentData.repository
   );
-  const {
-    data,
-    hasNext,
-    hasPrevious,
-    isLoadingNext,
-    isLoadingPrevious,
-    loadNext,
-    loadPrevious,
-    refetch,
-  } = response;
+  const { data, hasNext, isLoadingNext, loadNext } = response;
 
   const loadMore = useCallback(() => {
     // Don't fetch again if we're already loading the next page
@@ -77,8 +68,7 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
 
   return (
     <>
-      <div
-      >
+      <div>
         <div className="Issues-List-Header">
           <div className="fragment">
             <span className="title">
@@ -94,16 +84,13 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
               disabled={!hasNext ? "disabled" : ""}
               onClick={loadMore}
             >
-              Load More
+              {!isLoadingNext ? "Load More" : "Loading next 10..."}
             </button>
           </div>
         </div>
         {data.issues.edges.map((data) => {
           return (
-            <div
-              key={data.cursor}
-              className="Issue-Cell-Container"
-            >
+            <div key={data.cursor} className="Issue-Cell-Container">
               <RawData>
                 <div>Issue ID : {data.__id}</div>
                 <div>Cursor : {data.cursor}</div>
@@ -127,10 +114,10 @@ const IssuesList = ({ parentData, issuesToDisplay }) => {
  *
  * The component calls fo useFragment with the graphql compiled literal that describes the fragment, and the piece of the data into the query that contains the
  * information described in the upper paragraph, used by Relay can do it´s magic and and spread the details of the fragment into the constant `fragmentData`.
- * 
+ *
  * Additionally, the user can click on the name of an issue, and it will take him/her to the Issue page. You do that usinf the `Link` component. This component redurects the application
  * to the path `pathname: "/" + fragmentData.id` where `fragmentData.id` turns to get populated with the Issue id. It also establishes the state of the path `Location` with the values of the
- * name and owner of the repository, that are obtained from the application context. You have to do this when you have to query for data whose parameters you do not want to pass through the path 
+ * name and owner of the repository, that are obtained from the application context. You have to do this when you have to query for data whose parameters you do not want to pass through the path
  *
  * @param data The information with the result of the loaded query, to be used by the component to spread the fragment
  * @returns The resulted React component content
