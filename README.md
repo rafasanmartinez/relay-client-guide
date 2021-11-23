@@ -29,7 +29,7 @@ It will be interesting for you to inspect the internals of the `Store` by instal
 
 This sample is an slight evolution of [routing-2](https://github.com/rafasanmartinez/relay-client-guide/tree/routing-2).
 
-This evolution adds a mutation to the application. the mutation is in the `Issue.js` file. The mutation implemented adds a new comment to the list of coments of an issue. It uses `@appendEdge` to have relay to automatically update the store and have the new additioned comment to be added to tue user interface.
+This evolution adds a mutation to the application. the mutation is in the `Issue.js` file. The mutation implemented adds a new comment to the list of coments of an issue. It uses `@appendEdge` to have relay to automatically update the store and have the new additioned comment to be added to the user interface.
 
 ## Other reccomendations
 
