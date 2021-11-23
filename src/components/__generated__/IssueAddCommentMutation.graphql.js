@@ -19,6 +19,7 @@ export type IssueAddCommentMutationVariables = {|
 |};
 export type IssueAddCommentMutationResponse = {|
   +addComment: ?{|
+    +clientMutationId: ?string,
     +commentEdge: ?{|
       +cursor: string,
       +node: ?{|
@@ -47,6 +48,7 @@ mutation IssueAddCommentMutation(
   $input: AddCommentInput!
 ) {
   addComment(input: $input) {
+    clientMutationId
     commentEdge {
       cursor
       node {
@@ -93,41 +95,48 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "cursor",
+  "name": "clientMutationId",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "login",
+  "name": "cursor",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "publishedAt",
+  "name": "login",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "publishedAt",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "body",
   "storageKey": null
 },
-v8 = [
-  (v6/*: any*/)
+v9 = [
+  (v7/*: any*/)
 ],
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -152,6 +161,7 @@ return {
         "name": "addComment",
         "plural": false,
         "selections": [
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -160,7 +170,7 @@ return {
             "name": "commentEdge",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -177,13 +187,13 @@ return {
                     "name": "author",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
                   (v6/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -197,7 +207,7 @@ return {
             "kind": "LinkedField",
             "name": "subject",
             "plural": false,
-            "selections": (v8/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           }
         ],
@@ -224,6 +234,7 @@ return {
         "name": "addComment",
         "plural": false,
         "selections": [
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -232,7 +243,7 @@ return {
             "name": "commentEdge",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -249,20 +260,20 @@ return {
                     "name": "author",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
-                      (v4/*: any*/),
+                      (v10/*: any*/),
+                      (v5/*: any*/),
                       {
                         "kind": "InlineFragment",
-                        "selections": (v8/*: any*/),
+                        "selections": (v9/*: any*/),
                         "type": "Node",
                         "abstractKey": "__isNode"
                       }
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
                   (v6/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -293,8 +304,8 @@ return {
             "name": "subject",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
-              (v6/*: any*/)
+              (v10/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -304,16 +315,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9f53027c14f6542e5607d6d1c78a540a",
+    "cacheID": "4692eeb63394a0e59b7ce6d216cc1ff3",
     "id": null,
     "metadata": {},
     "name": "IssueAddCommentMutation",
     "operationKind": "mutation",
-    "text": "mutation IssueAddCommentMutation(\n  $input: AddCommentInput!\n) {\n  addComment(input: $input) {\n    commentEdge {\n      cursor\n      node {\n        author {\n          __typename\n          login\n          ... on Node {\n            __isNode: __typename\n            id\n          }\n        }\n        publishedAt\n        id\n        body\n      }\n    }\n    subject {\n      __typename\n      id\n    }\n  }\n}\n"
+    "text": "mutation IssueAddCommentMutation(\n  $input: AddCommentInput!\n) {\n  addComment(input: $input) {\n    clientMutationId\n    commentEdge {\n      cursor\n      node {\n        author {\n          __typename\n          login\n          ... on Node {\n            __isNode: __typename\n            id\n          }\n        }\n        publishedAt\n        id\n        body\n      }\n    }\n    subject {\n      __typename\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'cf561328e482c7361dfe79486e486aef';
+(node/*: any*/).hash = '657011937d71b97db431a58c475f16c5';
 
 module.exports = node;

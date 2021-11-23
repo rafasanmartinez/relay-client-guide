@@ -10,6 +10,7 @@ import {
   usePaginationFragment,
   useMutation,
 } from "react-relay";
+
 import RelayEnvironment from "../RelayEnvironment";
 
 import IssueQuery from "./__generated__/IssueQuery.graphql";
@@ -101,12 +102,17 @@ const CommentsFragment = graphql`
   }
 `;
 
+/**
+ * This is the Mutation, which includes @appendEdge, which will have relay to update the store
+ * when the mutation occurs
+ */
 graphql`
   mutation IssueAddCommentMutation(
     $input: AddCommentInput!
     $connections: [ID!]!
   ) {
     addComment(input: $input) {
+      clientMutationId
       commentEdge @appendEdge(connections: $connections) {
         cursor
         node {
@@ -240,24 +246,37 @@ type Props = {
 };
 
 const CommentsList = (props: Props) => {
+  // Control state of new comment input
   const { value: comment, bind: bindComment } = useInput("");
+
+  // Retrieve comments list from the store
   const response = usePaginationFragment(
     CommentsFragment,
     props.parentData.issue
   );
-
   const { data: fragmentData, hasNext, isLoadingNext, loadNext } = response;
 
-  const connectionId = fragmentData?.comments?.__id;
-  console.log("Connection Id");
-  console.log(connectionId);
-
-  console.log("Comments:");
-  console.log(response);
+  // Prepare mutation to be commited
   const [commit, isInFlight] = useMutation(AddCommentMutation);
 
+  const loadMore = useCallback(() => {
+    // Don't fetch again if we're already loading the next page
+    if (isLoadingNext) {
+      return;
+    }
+    loadNext(10);
+  }, [isLoadingNext, loadNext]);
+
+  // Define function to commit the addition of the comment. The variables requires the recently obtained
+  // connection id
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
+    // Obtain connection id for appending it to the store upon addition of the new comment (by using @appendEdge)
+    const connectionId = fragmentData?.comments?.__id;
+    if (!connectionId) return null;
+
+    // Populate variables to be sent to the mutation
     const variables: IssueAddCommentMutationVariables = {
       input: {
         body: comment,
@@ -267,16 +286,11 @@ const CommentsList = (props: Props) => {
     };
     commit({
       variables: variables,
+      onCompleted: (response) => console.log(response)
+      
     });
-  };
 
-  const loadMore = useCallback(() => {
-    // Don't fetch again if we're already loading the next page
-    if (isLoadingNext) {
-      return;
-    }
-    loadNext(10);
-  }, [isLoadingNext, loadNext]);
+  };
 
   if (!fragmentData) return null;
   const data: IssueComments_issue$data = fragmentData;
