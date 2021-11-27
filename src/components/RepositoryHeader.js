@@ -17,6 +17,7 @@ const RepositoryHeader = ({ data }) => {
   const fragmentData = useFragment(
     graphql`
       fragment RepositoryHeader_repository on Repository {
+        __typename
         owner {
           login
         }

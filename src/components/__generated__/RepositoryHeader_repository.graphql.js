@@ -18,6 +18,7 @@ export type RepositoryHeader_repository = {|
   +name: string,
   +nameWithOwner: string,
   +createdAt: any,
+  +__typename: "Repository",
   +$refType: RepositoryHeader_repository$ref,
 |};
 export type RepositoryHeader_repository$data = RepositoryHeader_repository;
@@ -35,6 +36,13 @@ const node/*: ReaderFragment*/ = {
   "metadata": null,
   "name": "RepositoryHeader_repository",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -79,6 +87,6 @@ const node/*: ReaderFragment*/ = {
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = 'b7868613169a3ceb4ecd62a0a3916614';
+(node/*: any*/).hash = '2a235d970a559e813c1fc2d8cceb37da';
 
 module.exports = node;
